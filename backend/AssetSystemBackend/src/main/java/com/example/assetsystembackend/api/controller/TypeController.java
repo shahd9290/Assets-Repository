@@ -19,16 +19,24 @@ public class TypeController {
         this.service = service;
     }
 
-    @GetMapping("/get-{name}")
-    public ResponseEntity<List<Object[]>> getType(@PathVariable String name){
+    @GetMapping("/get-type-data/{name}")
+    public ResponseEntity<List<Object[]>> getAllTypes(@PathVariable String name){
         List<Object[]> tableData= service.retrieveData(name);
-        if (tableData == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (tableData.isEmpty())
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tableData);
     }
 
+    @GetMapping("/get-columns/{tableName}")
+    public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName){
+        List<String> columns= service.getTableColumns(tableName);
+        if (columns.isEmpty())
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(columns);
+    }
 
-    @PostMapping("/add")
+
+    @PostMapping("/add-type")
     public ResponseEntity<Object> addType(@RequestBody Map<String, Object> payload) {
         if (!checkDataValid(payload))
             return ResponseEntity.badRequest().body("Invalid data provided!");
@@ -51,6 +59,7 @@ public class TypeController {
 
     /**
      * Method to verify the structure of the data received matches the expected one from the API.
+     * More checks can be added, now contains only the minimum the requirements.
      * @param payload The data received
      * @return {@code true} if the data matches the requirements, else {@code false}
      */
