@@ -3,9 +3,12 @@ package com.example.assetsystembackend.api.service;
 
 import com.example.assetsystembackend.api.repository.DynamicTableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -16,10 +19,12 @@ import java.util.List;
 public class DynamicService {
 
     private final DynamicTableRepository dynamicTableRepository;
+    private final JdbcTemplate template;
 
     @Autowired
-    public DynamicService(DynamicTableRepository dynamicTableRepository) {
+    public DynamicService(DynamicTableRepository dynamicTableRepository, JdbcTemplate template) {
         this.dynamicTableRepository = dynamicTableRepository;
+        this.template = template;
     }
 
     /**
@@ -36,5 +41,34 @@ public class DynamicService {
             return dynamicTableRepository.retrieveDataFromTable(tableName);
         }
         return null;
+    }
+
+    /**
+     * Creates a new table in the database with the specified tableName and columns.
+     *
+     * @param tableName The name of the table to be created.
+     * @param columns   A list of column names to be added to the table.
+     *                 Each column is a VARCHAR(20) data type by default.
+     * @return {@code true} if the table creation is successful, {@code false} otherwise.
+     */
+    public boolean createTable(String tableName, List<String> columns) {
+        try {
+            StringBuilder query = new StringBuilder("CREATE TABLE " + tableName + " (" +
+                    "id int PRIMARY KEY,");
+
+            for (String item : columns) {
+                //Everything default varchar20
+                query.append(item).append(" VARCHAR(20)").append(",");
+            }
+            query.deleteCharAt(query.length() - 1); //delete last trailing comma
+            query.append(");");
+
+            template.execute(query.toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }
