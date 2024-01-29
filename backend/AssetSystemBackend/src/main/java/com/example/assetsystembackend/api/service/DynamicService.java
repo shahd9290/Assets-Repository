@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,31 @@ public class DynamicService {
     public DynamicService(DynamicTableRepository dynamicTableRepository, JdbcTemplate template) {
         this.dynamicTableRepository = dynamicTableRepository;
         this.template = template;
+    }
+
+    /**
+     * Retrieves the column names of a specified table.
+     *
+     * @param tableName The name of the table for which to retrieve column names.
+     * @return A list of column names for the specified table.
+     */
+    public List<String> getTableColumns(String tableName) {
+        // "WHERE false" so it returns only the columns but no data
+        String query = "SELECT * FROM " + tableName + " WHERE false";
+
+        return template.query(query, rs -> {
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            List<String> columns = new ArrayList<>();
+
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                columns.add(columnName);
+            }
+
+            return columns;
+        });
     }
 
     /**
