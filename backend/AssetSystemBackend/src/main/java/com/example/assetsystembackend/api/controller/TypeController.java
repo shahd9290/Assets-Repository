@@ -58,6 +58,18 @@ public class TypeController {
     }
 
 
+    @PostMapping("/insert-data/{tableName}")
+    public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
+        if (!isValidInsertData(tableName, data))
+            return ResponseEntity.badRequest().body("Invalid data provided!");
+
+        if (!service.insertData(tableName, data))
+            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Data inserted successfully");
+    }
+
+
     /**
      * Method to verify the structure of the data received matches the expected one from the API.
      * More checks can be added, now contains only the minimum the requirements.
@@ -73,6 +85,14 @@ public class TypeController {
             return false;
 
         return true;
+    }
+
+    private boolean isValidInsertData(String tableName, Map<String, Object> data) {
+        // Get the expected columns for the given table
+        List<String> expectedColumns = service.getTableColumns(tableName);
+
+        // Check if the data keys match the expected columns
+        return expectedColumns.containsAll(data.keySet());
     }
 
 }
