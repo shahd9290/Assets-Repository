@@ -82,8 +82,46 @@ public class TypeControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    public void testInsertDataSuccess() throws Exception {
+        String tableName = "test_table";
+
+        //Create new table
+        template.execute("CREATE TABLE IF NOT EXISTS test_table (column1 VARCHAR(255), column2 VARCHAR(255));");
+
+        // Insert data into a new table
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("column1", "value1");
+        payload.put("column2", "value2");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isCreated())
+                .andExpect(content().string("Data inserted successfully"));
+
+        // Delete table
+        template.execute("DROP TABLE IF EXISTS test_table;");
+    }
 
 
+    @Test
+    public void testIsValidInsertData_Invalid() throws Exception {
+        //Create new table
+        template.execute("CREATE TABLE IF NOT EXISTS test_table (column1 VARCHAR(255), column2 VARCHAR(255));");
+
+        // Validate invalid data for insertion
+        String tableName = "test_table";
+        Map<String, Object> data = new HashMap<>();
+        data.put("column1", "value1");
+        data.put("column3", "value3"); // Wrong column (for testing)
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(data)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid data provided!"));
+    }
 
 
 }
