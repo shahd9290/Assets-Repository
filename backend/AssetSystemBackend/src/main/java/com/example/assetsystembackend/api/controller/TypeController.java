@@ -51,7 +51,8 @@ public class TypeController {
         List<String> columns = (List<String>) columnsObject;
 
         System.out.println(payload.get("columns").getClass());
-        service.createTable(tableName, columns);
+        if (!service.createTable(tableName, columns))
+            return ResponseEntity.badRequest().body("Table '" +tableName+ "' already exists.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Data added successfully");
     }
