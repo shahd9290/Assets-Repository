@@ -84,7 +84,7 @@ public class DynamicService {
                     "id int PRIMARY KEY,");
 
             for (String item : columns) {
-                //Everything default varchar20
+                //Everything default varchar100
                 query.append(item).append(" VARCHAR(100)").append(",");
             }
             query.deleteCharAt(query.length() - 1); //delete last trailing comma
