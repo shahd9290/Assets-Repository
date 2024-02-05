@@ -57,6 +57,19 @@ public class TypeController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Data added successfully");
     }
 
+    @PostMapping("/delete-type")
+    public ResponseEntity<Object> deleteType(@RequestBody Map<String, Object> payload) {
+        if (!payload.containsKey("table_name"))
+            return ResponseEntity.badRequest().body("Invalid data provided!");
+
+        String tableName = (String) payload.get("table_name");
+
+        if (!service.deleteTable(tableName))
+            return ResponseEntity.badRequest().body("Table '" +tableName+ "' doesn't exist.");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
+    }
+
 
     @PostMapping("/insert-data/{tableName}")
     public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {

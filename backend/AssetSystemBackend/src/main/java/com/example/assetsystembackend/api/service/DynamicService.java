@@ -99,6 +99,19 @@ public class DynamicService {
 
     }
 
+    public boolean deleteTable(String tableName) {
+        try {
+            StringBuilder query = new StringBuilder("DROP TABLE " + tableName + ";");
+
+            template.execute(query.toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     /**
      * Inserts data into the specified table.
      *
