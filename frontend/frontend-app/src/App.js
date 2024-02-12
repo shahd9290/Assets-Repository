@@ -1,8 +1,16 @@
-
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 
+
 function App() {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    type: '', // Assuming 'type' is a value you want to capture; adjust as needed
+  });
+  
   return (
     <div className="App">
       <head>
