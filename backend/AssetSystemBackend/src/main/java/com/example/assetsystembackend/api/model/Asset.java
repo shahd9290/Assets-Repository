@@ -35,7 +35,7 @@ public class Asset {
         this.description = description;
     }
 
-    public Asset() {
+    public Asset() { //Constructor required
         id = -1L; //required due to final id
     }
 
@@ -73,6 +73,12 @@ public class Asset {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString(){
+        String output= "{id(%d) | name(%s) | creation date(%s) | description(%s)}";
+        return String.format(output, id, name, creationDate.toString(), description);
     }
 
 }
