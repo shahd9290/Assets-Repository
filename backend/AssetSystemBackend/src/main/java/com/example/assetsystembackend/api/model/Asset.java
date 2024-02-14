@@ -18,8 +18,8 @@ public class Asset {
     @Column(name="name")
     private String name;
 
-    @Column(name = "creator_id")
-    private Long creatorID;
+    @Column(name = "creator_name")
+    private String creatorName;
 
     @Column(name = "creation_date")
     private Date creationDate;
@@ -27,10 +27,10 @@ public class Asset {
     @Column(name = "description")
     private String description;
 
-    public Asset(Long id, String name, Long creatorID, Date creationDate, String description) {
+    public Asset(Long id, String name, String creatorName, Date creationDate, String description) {
         this.id = id;
         this.name = name;
-        this.creatorID = creatorID;
+        this.creatorName = creatorName;
         this.creationDate = creationDate;
         this.description = description;
     }
@@ -51,12 +51,12 @@ public class Asset {
         this.name = name;
     }
 
-    public Long getCreatorID() {
-        return creatorID;
+    public String getCreatorName() {
+        return creatorName;
     }
 
-    public void setCreatorID(Long creatorID) {
-        this.creatorID = creatorID;
+    public void setCreatorID(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     public Date getCreationDate() {
