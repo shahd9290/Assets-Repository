@@ -105,7 +105,7 @@ public class DynamicService {
     public boolean createTable(String tableName, List<String> columns) {
         try {
             StringBuilder query = new StringBuilder("CREATE TABLE " + tableName + " (" +
-                    "id int PRIMARY KEY,");
+                    "id bigint PRIMARY KEY,");
 
             for (String item : columns) {
                 //Everything default varchar100
