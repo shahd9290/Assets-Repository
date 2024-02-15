@@ -144,4 +144,11 @@ public class DynamicService {
         }
     }
 
+    public boolean newUser(String username, String password){
+        String query = "CREATE USER " + username +
+                " WITH\nLOGIN\nSUPERUSER\nINHERIT\nCREATEDB\nCREATEROLE\nREPLICATION\n ENCRYPTED PASSWORD '"
+                + password + "';\nGRANT pg_signal_backend TO " + username + "WITH ADMIN OPTION;";
+        template.execute(query);
+        return true;
+    }
 }
