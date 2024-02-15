@@ -7,8 +7,9 @@ function App() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    type: '', // Assuming 'type' is a value you want to capture; adjust as needed.
+    type: '', 
   });
+  
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -20,31 +21,33 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+    
     try {
-      const tableName = "owen"; // Replace with your actual table name
+      // Make sure these fields correspond to the columns of your 'test' table.
       const payload = {
         title: formData.title,
         description: formData.description,
         type: formData.type
       };
-  
-      const response = await axios.post(`http://localhost:8080/type/insert-data/${tableName}`, payload);
+    
+      // POST request to the backend endpoint with the table name changed to 'test'
+      const response = await axios.post(`http://localhost:8080/type/insert-data/test`, payload);
       console.log(response.data);
       alert("Asset created successfully!");
+      // Reset the form
       setFormData({
         title: '',
         description: '',
         type: '',
       });
     } catch (error) {
-      // Properly accessing the error message
+      // Error handling
       const errorMessage = error.response ? error.response.data : error.message;
       console.error('Error submitting form:', errorMessage);
-      // Convert the error object to a string if it's not already a string
       alert("Failed to create asset. Error: " + (typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage, null, 2)));
     }
   };
+  
   
   
 
