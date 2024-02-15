@@ -74,7 +74,7 @@ function App() {
           id="asset-type"
           name="type"
           required
-          value={formData.type}
+          value={formData.type}n
           onChange={handleChange}
         >
           <option value="">-- Select a Type --</option>
