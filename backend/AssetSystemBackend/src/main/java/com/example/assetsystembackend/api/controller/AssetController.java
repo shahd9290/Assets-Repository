@@ -77,6 +77,32 @@ public class AssetController {
         return ResponseEntity.ok("Added successfully");
     }
 
+    @PostMapping("/delete-asset")
+    public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
+        if (!payload.containsKey("id"))
+            return ResponseEntity.badRequest().body("Missing Asset ID");
+
+        long assetID = (long) payload.get("id");
+        String typeName = null;
+
+        List<Asset> assets = getAssets();
+        for (Asset asset: assets) {
+            if (asset.getId() == assetID) {
+                typeName = asset.getType();
+            }
+        }
+
+        try {
+            dynamicService.deleteData(typeName, payload);
+            assetService.deleteAsset(assetID);
+            return ResponseEntity.ok("Data removed successfully");
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error!");
+        }
+    }
+
     // TODO: Add type attributes when returning assets.
     @GetMapping("/get-assets")
     public List<Asset> getAssets() {

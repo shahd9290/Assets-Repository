@@ -168,4 +168,18 @@ public class DynamicService {
         }
     }
 
+    public boolean deleteData(String tableName, Map<String, Object> data) {
+        long id = (long) data.get("id");
+
+        String query = String.format("DELETE FROM %s WHERE id = %d", tableName, id);
+
+        try {
+            template.execute(query);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
