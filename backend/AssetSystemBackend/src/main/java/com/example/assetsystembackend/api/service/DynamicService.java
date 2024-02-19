@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -55,6 +56,29 @@ public class DynamicService {
     }
 
     /**
+     * Looks through all the tables under the public schema, and returns all tables other than the assets table.
+     * These tables should refer to the individual type tables holding their respected attributes.
+     *
+     * @return A list of unique type tables
+     */
+    public List<String> getTypeTableNames() {
+        String query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';";
+
+        return template.query(query, rs -> {
+
+            List<String> columns = new ArrayList<>();
+
+            while (rs.next()) {
+                String table = rs.getString("table_name");
+                if (!table.equals("assets"))
+                    columns.add(table);
+            }
+
+            return columns;
+        });
+    }
+
+    /**
      * Retrieve data from a dynamic table.
      *
      * @param tableName The name of the dynamic table.
@@ -81,7 +105,7 @@ public class DynamicService {
     public boolean createTable(String tableName, List<String> columns) {
         try {
             StringBuilder query = new StringBuilder("CREATE TABLE " + tableName + " (" +
-                    "id int PRIMARY KEY,");
+                    "id bigint PRIMARY KEY,");
 
             for (String item : columns) {
                 //Everything default varchar100

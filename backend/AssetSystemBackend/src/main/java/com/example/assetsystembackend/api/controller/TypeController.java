@@ -35,6 +35,14 @@ public class TypeController {
         return ResponseEntity.ok(columns);
     }
 
+    @GetMapping("/get-types")
+    public ResponseEntity<Object> getType() {
+        List<String> tables = service.getTypeTableNames();
+        if (tables.isEmpty())
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(tables);
+    }
+
 
     @PostMapping("/add-type")
     public ResponseEntity<Object> addType(@RequestBody Map<String, Object> payload) {
