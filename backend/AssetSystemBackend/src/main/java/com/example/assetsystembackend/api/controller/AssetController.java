@@ -69,7 +69,7 @@ public class AssetController {
             }
         }
 
-        Asset newAsset = new Asset(id, assetData.get("name"), assetData.get("creatorname"), date, null, type);
+        Asset newAsset = new Asset(id, assetData.get("name"), assetData.get("creatorname"), date, null, type, null);
         assetService.saveNewAsset(newAsset);
         dynamicService.insertData(type, typeData);
 
