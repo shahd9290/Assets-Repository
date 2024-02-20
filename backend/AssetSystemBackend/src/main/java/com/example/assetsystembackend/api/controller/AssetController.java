@@ -85,10 +85,10 @@ public class AssetController {
         long assetID = (long) payload.get("id");
         String typeName = null;
 
-        List<Asset> assets = getAssets();
-        for (Asset asset: assets) {
-            if (asset.getId() == assetID) {
-                typeName = asset.getType();
+        List<Map<String, Object>> assets = getAssets();
+        for (Map<String, Object> asset: assets) {
+            if ((long) asset.get("id") == assetID) {
+                typeName = (String) asset.get("type");
             }
         }
 
@@ -103,10 +103,51 @@ public class AssetController {
         }
     }
 
-    // TODO: Add type attributes when returning assets.
     @GetMapping("/get-assets")
-    public List<Asset> getAssets() {
-        return assetService.getAllAssets();
+    public List<Map<String, Object>> getAssets() {
+        List<Asset> assetsInfo =  assetService.getAllAssets();
+        ListIterator<Asset> assetIterator = assetsInfo.listIterator();
+
+        Map<String, List<String>> typeColumns = new HashMap<>();
+        Map<String, List<Object[]>> typeDataMap = new HashMap<>();
+
+        List<Map<String, Object>> output = new ArrayList<>();
+
+
+        while (assetIterator.hasNext()) {
+            Asset asset = assetIterator.next();
+            String type = asset.getType();
+            Map<String, Object> assetData = new HashMap<>();
+
+            assetData.put("id", asset.getId());
+            assetData.put("name", asset.getName());
+            assetData.put("creator_name", asset.getCreatorName());
+            assetData.put("creation_date", asset.getCreationDate());
+            assetData.put("description", asset.getDescription());
+            assetData.put("type", type);
+            assetData.put("link", asset.getLink());
+
+            // Prevents requesting for certain types repeatedly
+            if (!typeColumns.containsKey(type) || !typeDataMap.containsKey(type)) {
+                typeColumns.put(type, dynamicService.getTableColumns(type));
+                typeDataMap.put(type, dynamicService.retrieveData(type));
+            }
+
+            List<Object[]> entries = typeDataMap.get(type); // all entries under one type
+            List<String> columns = typeColumns.get(type);
+
+
+            for (Object[] entry : entries) {
+                for (int i = 1; i < columns.size(); i++) {
+                    if ((long)entry[0] == asset.getId()) {
+                        assetData.put(columns.get(i), entry[i]);
+                    }
+                }
+            }
+            output.add(assetData);
+        }
+
+        return output;
     }
 
 }
