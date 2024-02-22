@@ -35,6 +35,9 @@ public class TypeControllerTest {
 
     @Test
     public void testAddTypeEndpoint() throws Exception {
+        //Delete table
+        template.execute("DROP TABLE IF EXISTS test_table;");
+        
         Map<String, Object> payload = new HashMap<>();
         payload.put("table_name", "test_table");
         payload.put("columns", List.of("column1", "column2"));
