@@ -1,11 +1,13 @@
 package com.example.assetsystembackend.api.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class BaseUser {
 
     private final JdbcTemplate template;
 
+    @Autowired
     public BaseUser(JdbcTemplate template){
         this.template = template;
     }
