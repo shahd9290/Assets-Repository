@@ -75,7 +75,7 @@ public class AssetController {
         if (!payload.containsKey("id"))
             return ResponseEntity.badRequest().body("Missing Asset ID");
 
-        long assetID = (long) payload.get("id");
+        long assetID = ((Integer) payload.get("id")).longValue();
         String typeName = null;
 
         List<Map<String, Object>> assets = getAssets();
@@ -132,7 +132,7 @@ public class AssetController {
 
             for (Object[] entry : entries) {
                 for (int i = 1; i < columns.size(); i++) {
-                    if ((long)entry[0] == asset.getId()) {
+                    if (entry[0] == asset.getId()) {
                         assetData.put(columns.get(i), entry[i]);
                     }
                 }

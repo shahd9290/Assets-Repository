@@ -168,7 +168,7 @@ public class DynamicService {
     }
 
     public boolean deleteData(String tableName, Map<String, Object> data) {
-        long id = (long) data.get("id");
+        long id = ((Integer) data.get("id")).longValue();
 
         String query = String.format("DELETE FROM %s WHERE id = %d", tableName, id);
 
