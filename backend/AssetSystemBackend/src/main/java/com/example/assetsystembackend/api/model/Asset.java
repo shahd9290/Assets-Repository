@@ -1,9 +1,6 @@
 package com.example.assetsystembackend.api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.sql.Date;
 
@@ -12,8 +9,9 @@ import java.sql.Date;
 public class Asset {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="asset_id")
-    private final Long id;
+    private Long id;
 
     @Column(name="name")
     private String name;
@@ -33,8 +31,7 @@ public class Asset {
     @Column(name = "type")
     private String type;
 
-    public Asset(Long id, String name, String creatorName, Date creationDate, String description, String type, String link) {
-        this.id = id;
+    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link) {
         this.name = name;
         this.creatorName = creatorName;
         this.creationDate = creationDate;
@@ -44,7 +41,6 @@ public class Asset {
     }
 
     public Asset() { //Constructor required
-        id = -1L; //required due to final id
     }
 
     public Long getId() {
