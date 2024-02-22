@@ -158,7 +158,6 @@ public class DynamicService {
 
 
         String query = String.format("INSERT INTO %s (%s) VALUES (%s);",tableName, columns, values);
-        System.err.println("Epstein:\n"+query);
         try {
             template.execute(query);
             return true;

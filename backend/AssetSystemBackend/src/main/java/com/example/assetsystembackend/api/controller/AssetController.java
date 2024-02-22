@@ -4,7 +4,6 @@ import com.example.assetsystembackend.api.model.Asset;
 import com.example.assetsystembackend.api.service.AssetService;
 import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,13 +19,11 @@ public class AssetController {
 
     private final AssetService assetService;
     private final DynamicService dynamicService;
-    private final Random random;
 
     @Autowired
     public AssetController(AssetService assetService, DynamicService dynamicService){
         this.assetService = assetService;
         this.dynamicService = dynamicService;
-        random = new Random();
     }
 
 
@@ -41,8 +38,6 @@ public class AssetController {
         if (!payload.containsKey("asset") || !payload.containsKey("type"))
             return ResponseEntity.badRequest().body("Missing data");
 
-
-
         //break asset data from type data
         Map<String, String> assetData = (Map<String, String>) payload.get("asset");
         Map<String, Object> typeData = (Map<String, Object>) payload.get("type");
@@ -51,9 +46,7 @@ public class AssetController {
         LocalDate currentDate = LocalDate.now();
         Date date = Date.valueOf(currentDate);
 
-        long id = random.nextLong();
         String type = assetData.get("type");
-        typeData.put("id", (Object) id);
 
         // Check if type table exists
         if (!dynamicService.getTypeTableNames().contains(type)) {
@@ -69,7 +62,7 @@ public class AssetController {
             }
         }
 
-        Asset newAsset = new Asset(id, assetData.get("name"), assetData.get("creatorname"), date, null, type, null);
+        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, null, type, null);
         assetService.saveNewAsset(newAsset);
         dynamicService.insertData(type, typeData);
 
