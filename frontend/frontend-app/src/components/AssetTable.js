@@ -12,6 +12,15 @@ const Fetch = () => {
         setAssets(data);
       });
   }, []);
+  function deleteBtn(id){
+    fetch('http://localhost:8080/delete-asset',{method :'DELETE', 
+    body:JSON.stringify({"id":id})})
+    .then( (item)=>{
+        item.json().then((response)=>{console.warn(response)})
+    }
+
+    )
+  }
   return (
     <div>
          <h1> Assets </h1>
@@ -37,7 +46,7 @@ const Fetch = () => {
                          <td>{asset.type}</td>
                          <td>
                              <button className = "btn btn-danger" 
-                             style = {{marginLeft:"10px"}}> Delete</button>
+                             style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.asset_id)} > Delete</button>
                          </td>
                      </tr>
                  ))}

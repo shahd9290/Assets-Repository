@@ -6,6 +6,7 @@ import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,7 +78,7 @@ public class AssetController {
         return ResponseEntity.ok("Added successfully");
     }
 
-    @PostMapping("/delete-asset")
+    @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
         if (!payload.containsKey("id"))
             return ResponseEntity.badRequest().body("Missing Asset ID");
