@@ -5,10 +5,7 @@ import com.example.assetsystembackend.api.service.AssetService;
 import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.sql.Date;
@@ -71,25 +68,28 @@ public class AssetController {
         return ResponseEntity.ok("Added successfully");
     }
 
-    @PostMapping("/delete-asset")
+    @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
         if (!payload.containsKey("id"))
             return ResponseEntity.badRequest().body("Missing Asset ID");
 
         long assetID = ((Integer) payload.get("id")).longValue();
-        String typeName = null;
 
-        List<Map<String, Object>> assets = getAssets();
-        for (Map<String, Object> asset: assets) {
-            if ((long) asset.get("id") == assetID) {
-                typeName = (String) asset.get("type");
-            }
-        }
+        Optional<Asset> returnedAsset = assetService.findByID(assetID);
+        if (returnedAsset.isEmpty())
+
+
+            return ResponseEntity.badRequest().body("Invalid ID!");
+
+
+        String typeName = returnedAsset.get().getType();
 
         try {
-            dynamicService.deleteData(typeName, payload);
+            if (!dynamicService.deleteData(typeName, assetID)){
+                return ResponseEntity.badRequest().body("Invalid ID!");
+            }
             assetService.deleteAsset(assetID);
-            return ResponseEntity.ok("Data removed successfully");
+            return ResponseEntity.ok("Successful Removal");
         }
         catch(Exception e) {
             e.printStackTrace();

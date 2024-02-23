@@ -159,22 +159,20 @@ public class DynamicService {
 
         String query = String.format("INSERT INTO %s (%s) VALUES (%s);",tableName, columns, values);
         try {
-            template.execute(query);
-            return true;
+            return template.update(query) == 1;
         } catch (Exception e){
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean deleteData(String tableName, Map<String, Object> data) {
-        long id = ((Integer) data.get("id")).longValue();
+    public boolean deleteData(String tableName, long id) {
 
         String query = String.format("DELETE FROM %s WHERE id = %d", tableName, id);
 
         try {
-            template.execute(query);
-            return true;
+            return template.update(query) == 1;
+
         } catch (Exception e){
             e.printStackTrace();
             return false;
