@@ -26,7 +26,9 @@ public class AssetService {
         return assetsRepo.findById(id);
     }
 
-    public Asset saveNewAsset(Asset asset){return assetsRepo.save(asset);}
+    public long saveNewAsset(Asset asset){
+        return assetsRepo.save(asset).getId();
+    }
 
     public void deleteAsset(Long id) {assetsRepo.deleteById(id);}
 }

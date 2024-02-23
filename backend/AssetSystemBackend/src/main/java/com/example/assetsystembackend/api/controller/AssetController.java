@@ -55,15 +55,16 @@ public class AssetController {
         // Check if columns keys are actual columns in the table
         else {
             List<String> columns = dynamicService.getTableColumns(type);
-            for (String column : columns) {
-                if (!typeData.containsKey(column)) {
+            for (int i = 1; i<columns.size(); i++) {
+                if (!typeData.containsKey(columns.get(i))) {
                     return ResponseEntity.badRequest().body("Invalid Type!\nEnsure the Type contains the specified columns.");
                 }
             }
         }
 
         Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, null, type, null);
-        assetService.saveNewAsset(newAsset);
+        long tempID = assetService.saveNewAsset(newAsset);
+        typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
 
 
