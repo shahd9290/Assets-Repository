@@ -66,7 +66,10 @@ public class AssetController {
             }
         }
 
-        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, null, type, null);
+        String description = assetData.getOrDefault("description", null);
+        String link = assetData.getOrDefault("link", null);
+
+        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link);
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
