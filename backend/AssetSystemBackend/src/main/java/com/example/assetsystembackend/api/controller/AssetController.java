@@ -17,6 +17,13 @@ public class AssetController {
     private final AssetService assetService;
     private final DynamicService dynamicService;
 
+    public static final String INVALID_ID_MSG = "Invalid ID!";
+    public static final String SUCCESS_MSG = "Insertion successful!";
+    public static final String REMOVAL_MSG = "Removal successful!";
+    public static final String MISSING_DATA_MSG = "Missing data!";
+    public static final String INVALID_TYPE_MSG = "Invalid Type!";
+
+
     @Autowired
     public AssetController(AssetService assetService, DynamicService dynamicService){
         this.assetService = assetService;
@@ -33,7 +40,7 @@ public class AssetController {
     public ResponseEntity<String> addAsset(@RequestBody  Map<String, Object> payload) {
         //check data is compatible
         if (!payload.containsKey("asset") || !payload.containsKey("type"))
-            return ResponseEntity.badRequest().body("Missing data");
+            return ResponseEntity.badRequest().body(MISSING_DATA_MSG);
 
         //break asset data from type data
         Map<String, String> assetData = (Map<String, String>) payload.get("asset");
@@ -47,14 +54,14 @@ public class AssetController {
 
         // Check if type table exists
         if (!dynamicService.getTypeTableNames().contains(type)) {
-            return ResponseEntity.badRequest().body("Invalid Type!\nEnsure the Type exists.");
+            return ResponseEntity.badRequest().body(INVALID_TYPE_MSG + "\nEnsure the Type exists.");
         }
         // Check if columns keys are actual columns in the table
         else {
             List<String> columns = dynamicService.getTableColumns(type);
             for (int i = 1; i<columns.size(); i++) {
                 if (!typeData.containsKey(columns.get(i))) {
-                    return ResponseEntity.badRequest().body("Invalid Type!\nEnsure the Type contains the specified columns.");
+                    return ResponseEntity.badRequest().body(INVALID_TYPE_MSG +"\nEnsure the Type contains the specified columns.");
                 }
             }
         }
@@ -64,36 +71,33 @@ public class AssetController {
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
 
-
-        return ResponseEntity.ok("Added successfully");
+        return ResponseEntity.ok(SUCCESS_MSG);
     }
 
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
         if (!payload.containsKey("id"))
-            return ResponseEntity.badRequest().body("Missing Asset ID");
+            return ResponseEntity.badRequest().body(SUCCESS_MSG + "(Missing Asset ID)");
 
         long assetID = ((Integer) payload.get("id")).longValue();
 
         Optional<Asset> returnedAsset = assetService.findByID(assetID);
         if (returnedAsset.isEmpty())
-
-
-            return ResponseEntity.badRequest().body("Invalid ID!");
+            return ResponseEntity.badRequest().body(INVALID_ID_MSG);
 
 
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (!dynamicService.deleteData(typeName, assetID)){
-                return ResponseEntity.badRequest().body("Invalid ID!");
+            if (!dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
+                return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
-            assetService.deleteAsset(assetID);
-            return ResponseEntity.ok("Successful Removal");
+
+            return ResponseEntity.ok(REMOVAL_MSG);
         }
         catch(Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error!");
+            return ResponseEntity.badRequest().body("Server issue while deleting data");
         }
     }
 

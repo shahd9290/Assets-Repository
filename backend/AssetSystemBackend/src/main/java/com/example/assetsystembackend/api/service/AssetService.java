@@ -30,5 +30,11 @@ public class AssetService {
         return assetsRepo.save(asset).getId();
     }
 
-    public void deleteAsset(Long id) {assetsRepo.deleteById(id);}
+    public boolean deleteAsset(Long id) {
+        if (assetsRepo.existsById(id)) {
+            assetsRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
