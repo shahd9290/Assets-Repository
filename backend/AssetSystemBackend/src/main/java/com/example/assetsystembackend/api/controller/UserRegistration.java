@@ -1,5 +1,6 @@
 package com.example.assetsystembackend.api.controller;
 
+import com.example.assetsystembackend.api.user.BaseUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,11 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserRegistration {
 
-    private final JdbcTemplate template;
+    BaseUser user;
 
     @Autowired
-    public UserRegistration(JdbcTemplate template){
-        this.template = template;
+    public UserRegistration(JdbcTemplate template, BaseUser user){
+        this.user = user;
     }
 
     @PostMapping("/registration")
@@ -37,7 +38,7 @@ public class UserRegistration {
             return ResponseEntity.badRequest().body("Invalid password.");
         }
 
-        newUser(username, password);
+        user.newUser(username, password);
 
         return ResponseEntity.status(HttpStatus.OK).body("User registered.");
 
@@ -48,10 +49,4 @@ public class UserRegistration {
         return data.length() >= 6;
     }
 
-    public void newUser(String username, String password){
-        String query = "CREATE USER " + username +
-                " WITH\nLOGIN\nSUPERUSER\nINHERIT\nCREATEDB\nCREATEROLE\nREPLICATION\n ENCRYPTED PASSWORD '"
-                + password + "';\nGRANT pg_signal_backend TO " + username + " WITH ADMIN OPTION;";
-        template.execute(query);
-    }
 }
