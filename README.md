@@ -1,5 +1,6 @@
 # Team Project
 
-This repository has been created to store your Team Project.
-
-You may edit it as you like, but please do not remove the default topics or the project members list. These need to stay as currently defined in order for your lecturer to be able to find and mark your work.
+Sprint 3 - 
+Postman is giving error 415 , unsupported media type 
+Data is not being inserted into tables in pgadmin , however the error that is shown in post man is also shown on the front end - therefore the front end and backend have been connected successfully.
+In this sprint it will be about sorting the database and tables , hence the little to no commits as the code is not the issue. 
