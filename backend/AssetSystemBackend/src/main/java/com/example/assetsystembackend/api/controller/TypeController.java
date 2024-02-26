@@ -95,7 +95,7 @@ public class TypeController {
         if (!isValidInsertData(tableName, data))
             return ResponseEntity.badRequest().body("Invalid data provided!");
 
-        if (!service.deleteData(tableName, data))
+        if (!service.deleteData(tableName, (Long) data.get("id")))
             return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
