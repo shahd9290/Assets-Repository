@@ -31,7 +31,7 @@ function App() {
       };
     
       // POST request to the backend endpoint with the table name changed to 'test'
-      const response = await axios.post(`http://localhost:8080/type/insert-data/test`, payload);
+      const response = await axios.post(`http://localhost:8080/add-new-asset`, payload);
       console.log(response.data);
       alert("Asset created successfully!");
       // Reset the form
