@@ -150,5 +150,17 @@ public class AssetController {
 
         return output;
     }
+    @GetMapping("/search")
+    public List<Map<String, Object>> search(@RequestBody  Map<String, Object> payload) {
+        List<Map<String, Object>> assetList = getAssets();
 
+        /* Filters:
+        * type
+        * date_before
+        * date_after
+        * user
+         */
+
+        return assetList;
+    }
 }
