@@ -35,6 +35,9 @@ public class TypeControllerTest {
 
     @Test
     public void testAddTypeEndpoint() throws Exception {
+        //Delete table
+        template.execute("DROP TABLE IF EXISTS test_table;");
+        
         Map<String, Object> payload = new HashMap<>();
         payload.put("table_name", "test_table");
         payload.put("columns", List.of("column1", "column2"));
@@ -121,7 +124,31 @@ public class TypeControllerTest {
                         .content(objectMapper.writeValueAsString(data)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid data provided!"));
+
+        // Delete table
+        template.execute("DROP TABLE IF EXISTS test_table;");
     }
 
+    @Test
+    public void testDeleteTypeEndpoint() throws Exception {
+        // Create a table for deletion
+        template.execute("CREATE TABLE IF NOT EXISTS test_table (id SERIAL PRIMARY KEY, column1 VARCHAR(255));");
+        template.execute("INSERT INTO test_table(column1) VALUES ('testSubject1'), ('testSubject2'), ('testSubject3');");
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("id", 3);
+
+        String payloadJson = objectMapper.writeValueAsString(payload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/delete-asset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payloadJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Data removed successfully"));
+
+        // Delete table
+        template.execute("DROP TABLE IF EXISTS test_table;");
+
+    }
 
 }

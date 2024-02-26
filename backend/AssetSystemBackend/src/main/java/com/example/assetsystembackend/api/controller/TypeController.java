@@ -90,6 +90,17 @@ public class TypeController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Data inserted successfully");
     }
 
+    @PostMapping("/remove-data/{tableName}")
+    public ResponseEntity<Object> deleteData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
+        if (!isValidInsertData(tableName, data))
+            return ResponseEntity.badRequest().body("Invalid data provided!");
+
+        if (!service.deleteData(tableName, (Long) data.get("id")))
+            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
+
+    }
 
     /**
      * Method to verify the structure of the data received matches the expected one from the API.

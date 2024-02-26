@@ -1,9 +1,6 @@
 package com.example.assetsystembackend.api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.sql.Date;
 
@@ -12,11 +9,15 @@ import java.sql.Date;
 public class Asset {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="asset_id")
-    private final Long id;
+    private Long id;
 
     @Column(name="name")
     private String name;
+
+    @Column(name="link")
+    private String link;
 
     @Column(name = "creator_name")
     private String creatorName;
@@ -30,17 +31,16 @@ public class Asset {
     @Column(name = "type")
     private String type;
 
-    public Asset(Long id, String name, String creatorName, Date creationDate, String description, String type) {
-        this.id = id;
+    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link) {
         this.name = name;
         this.creatorName = creatorName;
         this.creationDate = creationDate;
         this.description = description;
         this.type = type;
+        this.link = link;
     }
 
     public Asset() { //Constructor required
-        id = -1L; //required due to final id
     }
 
     public Long getId() {
@@ -83,11 +83,15 @@ public class Asset {
 
     public void setType(String type) {this.type = type;}
 
+    public String getLink() {return link;}
+
+    public void setLink(String link) {this.link = link;}
+
 
     @Override
     public String toString(){
-        String output= "{id(%d) | name(%s) | type(%s) | creation date(%s) | description(%s)}";
-        return String.format(output, id, name, type, creationDate.toString(), description);
+        String output= "{id(%d) | name(%s) | type(%s) | link(%s) | creation date(%s) | description(%s)}";
+        return String.format(output, id, name, type, link, creationDate.toString(), description);
     }
 
 }

@@ -105,7 +105,7 @@ public class DynamicService {
     public boolean createTable(String tableName, List<String> columns) {
         try {
             StringBuilder query = new StringBuilder("CREATE TABLE " + tableName + " (" +
-                    "id bigint PRIMARY KEY,");
+                    "id SERIAL PRIMARY KEY,");
 
             for (String item : columns) {
                 //Everything default varchar100
@@ -158,10 +158,21 @@ public class DynamicService {
 
 
         String query = String.format("INSERT INTO %s (%s) VALUES (%s);",tableName, columns, values);
+        try {
+            return template.update(query) == 1;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteData(String tableName, long id) {
+
+        String query = String.format("DELETE FROM %s WHERE id = %d", tableName, id);
 
         try {
-            template.execute(query);
-            return true;
+            return template.update(query) == 1;
+
         } catch (Exception e){
             e.printStackTrace();
             return false;

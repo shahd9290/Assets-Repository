@@ -26,9 +26,15 @@ public class AssetService {
         return assetsRepo.findById(id);
     }
 
-    public Asset saveNewAsset(Asset asset){
-        return assetsRepo.save(asset);
+    public long saveNewAsset(Asset asset){
+        return assetsRepo.save(asset).getId();
     }
 
-
+    public boolean deleteAsset(Long id) {
+        if (assetsRepo.existsById(id)) {
+            assetsRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
