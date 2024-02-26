@@ -80,7 +80,7 @@ public class AssetController {
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
         if (!payload.containsKey("id"))
-            return ResponseEntity.badRequest().body(SUCCESS_MSG + "(Missing Asset ID)");
+            return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
 
         long assetID = ((Integer) payload.get("id")).longValue();
 
