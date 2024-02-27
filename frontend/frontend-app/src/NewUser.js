@@ -9,6 +9,14 @@ function NewUser() {
       <body>
         <h1>Registering a New User</h1>
         <form>
+          <label for="firstName">Enter your first name:</label>
+          <p></p>
+          <input type="text" id="firstName" name="firstN" required/>
+          <p></p>
+          <label for="lastName">Enter your family name:</label>
+          <p></p>
+          <input type="text" id="lastName" name="lastN" required/>
+          <p></p>
           <label for="userName">Enter a new username:</label>
           <p></p>
           <input type="text" id="userName" name="user" required/>
