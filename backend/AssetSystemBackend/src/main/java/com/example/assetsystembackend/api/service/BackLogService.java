@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BackLogService {
@@ -24,7 +25,15 @@ public class BackLogService {
     public BackLogService(BackLogRepository logRepo) {
         backLogRepository = logRepo;
     }
-    
+
+
+    public List<String> getBackLog() {
+        List<BackLog> all = backLogRepository.findAll();
+        return all.stream()
+                .map(BackLog::getMessage)
+                .collect(Collectors.toList());
+    }
+
     public boolean addAssetCreation(Asset asset) {
         BackLog newEntry = new BackLog();
         newEntry.setAsset(asset);
@@ -35,6 +44,10 @@ public class BackLogService {
         return returned.getId() != null;
     }
 
+    public List<BackLog> getBackLogByAsset(Long id) {
+        return backLogRepository.findByAssetId(id);
+        // return backLogRepository.findAll().stream().filter(e -> Objects.equals(e.getId(), id)).toList();
+    }
 
 
 
