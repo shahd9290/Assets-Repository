@@ -9,25 +9,28 @@ const Fetch = () => {
   function getAssets(){
     fetch('http://localhost:8080/get-assets')
     .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
-      setAssets(data);
-    });
+        return res.json();
+        })
+        .then((data) => {
+            console.log(data);
+            setAssets(data);
+        });
   }
   function deleteBtn(id){
-    fetch('http://localhost:8080/delete-asset',{method :'DELETE', headers : {
-        "Content-Type": "application/json"
-    },
-    body:JSON.stringify({"id":id})})
-    .then( (item)=>{
-        item.json().then((response)=>{
-            console.warn(response);
-            getAssets()
-        })
-    }
-    )
+    if(window.confirm("Are you sure you want to delete this asset?")){
+        fetch('http://localhost:8080/delete-asset',
+        {method :'DELETE', 
+        headers : {"Content-Type": "application/json"},
+        body:JSON.stringify({"id":id})})
+        .then( (item)=>{
+            item.text()
+            .then((response)=>{
+                console.warn(response);
+                alert(response);
+                getAssets()
+            })
+        }
+    )}
   }
   return (
     <div>
