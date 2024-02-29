@@ -33,3 +33,11 @@ table tr:nth-child(even) {
   h1 {
     text-align: center;
   }
+  .delete{
+    color: #faf9f9;
+    background-color: crimson;
+    margin-right: 10px;
+  }
+  .delete:hover{
+    background-color: crimson;
+  }

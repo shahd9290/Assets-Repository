@@ -19,7 +19,7 @@ const Fetch = () => {
   function deleteBtn(id){
     if(window.confirm("Are you sure you want to delete this asset?")){
         fetch('http://localhost:8080/delete-asset',
-        {method :'DELETE', 
+        {method :'DELETE',
         headers : {"Content-Type": "application/json"},
         body:JSON.stringify({"id":id})})
         .then( (item)=>{
@@ -58,8 +58,9 @@ const Fetch = () => {
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
                          <td>
-                             <button className = "btn btn-danger"
+                             <button className = "delete"
                              style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
+                             <button className = "auditTrail">Show Audit Trail</button>
                          </td>
                      </tr>
                  ))}
