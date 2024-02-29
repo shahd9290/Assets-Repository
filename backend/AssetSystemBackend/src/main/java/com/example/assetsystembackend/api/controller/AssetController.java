@@ -92,11 +92,12 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (!dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
-                return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+            if (dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
+                return ResponseEntity.ok(REMOVAL_MSG);
             }
 
-            return ResponseEntity.ok(REMOVAL_MSG);
+            return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+
         }
         catch(Exception e) {
             e.printStackTrace();
