@@ -3,6 +3,7 @@ package com.example.assetsystembackend.api.controller;
 import com.example.assetsystembackend.api.model.Asset;
 import com.example.assetsystembackend.api.service.AssetService;
 import com.example.assetsystembackend.api.service.DynamicService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -151,8 +152,9 @@ public class AssetController {
         return output;
     }
     @GetMapping("/search")
-    public List<Map<String, Object>> search(@RequestBody  Map<String, Object> payload) {
+    public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();
+        List<Map<String, Object>> output = new ArrayList<>();
 
         /* Filters:
         * type
@@ -161,6 +163,24 @@ public class AssetController {
         * user
          */
 
-        return assetList;
+        String type = (String) payload.getOrDefault("type", null);
+        Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
+        Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
+        String user = (String) payload.getOrDefault("user", null);
+
+        // Check condition. If condition is false restart loop and don't add to output.
+        for (Map<String, Object> asset : assetList) {
+            if (type != null && !asset.get("type").equals(type))
+                continue;
+            if (user != null && !asset.get("creator_name").equals(user))
+                continue;
+            if (date_before != null && !date_before.after((Date) asset.get("creation_date")))
+                continue;
+            if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
+                continue;
+            output.add(asset);
+        }
+
+        return output;
     }
 }
