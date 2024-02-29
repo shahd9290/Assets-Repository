@@ -58,8 +58,9 @@ const Fetch = () => {
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
                          <td>
-                             <button className = "btn btn-danger" 
+                             <button className = "delete" 
                              style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
+                             <button className = "auditTrail">Show Audit Trail</button>
                          </td>
                      </tr>
                  ))}
