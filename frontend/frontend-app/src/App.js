@@ -24,36 +24,36 @@ function App() {
     
     try {
       const payload = {
-        asset: { 
-          name: 'HardcodedName', 
-          creator: 'Hardcoded Creator', 
-          type: formData.type,
+        asset: {
+          name: 'asdasdsetrrhhnn',
+          creator: 'sdsf',
+          type: 'test',
         },
         type: {
-          title: formData.title,
+          title: formData.title, 
           description: formData.description,
           type: formData.type,
         }
       };
       
-      
-      const response = await axios.post(`http://localhost:8080/add-new-asset`, payload);
+      // POST request to the backend endpoint
+      const response = await axios.post('http://localhost:8080/add-new-asset', payload);
       console.log(response.data);
       alert("Asset created successfully!");
       
+      // Reset the form
       setFormData({
         title: '',
         description: '',
         type: '',
       });
     } catch (error) {
+      // Error handling
       const errorMessage = error.response ? error.response.data : error.message;
       console.error('Error submitting form:', errorMessage);
       alert("Failed to create asset. Error: " + (typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage, null, 2)));
     }
   };
-  
-  
   
   
 
@@ -83,7 +83,7 @@ function App() {
           id="asset-type"
           name="type"
           required
-          value={formData.type}
+          value={formData.type}n
           onChange={handleChange}
         >
           <option value="">-- Select a Type --</option>
@@ -97,3 +97,4 @@ function App() {
 }
 
 export default App;
+
