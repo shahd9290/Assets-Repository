@@ -80,7 +80,7 @@ public class AssetController {
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
         if (!payload.containsKey("id"))
-            return ResponseEntity.badRequest().body(SUCCESS_MSG + "(Missing Asset ID)");
+            return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
 
         long assetID = ((Integer) payload.get("id")).longValue();
 
@@ -92,11 +92,35 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (!dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
-                return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+            if (dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
+                return ResponseEntity.ok(REMOVAL_MSG);
             }
 
-            return ResponseEntity.ok(REMOVAL_MSG);
+            return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Server issue while deleting data");
+        }
+    }
+
+    @DeleteMapping("/bulk-delete")
+    public ResponseEntity<String> bulkDelete(@RequestBody  Map<String, Object> payload) {
+        if (!payload.containsKey("ids"))
+            return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
+
+        ArrayList<Integer> ids = (ArrayList<Integer>) payload.get("ids");
+
+        Map<String, Object> idMap = new HashMap<String, Object>();
+
+        try {
+            for (int id : ids) {
+                idMap.put("id", id);
+                deleteAsset(idMap);
+                idMap.remove("id");
+            }
+            return ResponseEntity.badRequest().body(REMOVAL_MSG);
         }
         catch(Exception e) {
             e.printStackTrace();
