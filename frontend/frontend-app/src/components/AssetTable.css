@@ -1,0 +1,35 @@
+/* Style for the table */
+ table {
+    width: 60%;
+    border-collapse: collapse;
+    margin: 50px 200px;
+    
+  }
+  
+  /* Header row style */
+ table th {
+    background-color: #fffdfd;
+    font-weight: bold;
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #050505;
+  }
+  
+  /* Alternate row background color for better readability */
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Default row style */
+  table td {
+    padding: 8px;
+    border: 1px solid #a9a6a6;
+  }
+  
+  /* Hover effect on rows */
+  table tr:hover {
+    background-color: #a6a2a2;
+  }
+  h1 {
+    text-align: center;
+  }
