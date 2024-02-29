@@ -105,6 +105,29 @@ public class AssetController {
         }
     }
 
+    @DeleteMapping("/bulk-delete")
+    public ResponseEntity<String> bulkDelete(@RequestBody  Map<String, Object> payload) {
+        if (!payload.containsKey("ids"))
+            return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
+
+        ArrayList<Integer> ids = (ArrayList<Integer>) payload.get("ids");
+
+        Map<String, Object> idMap = new HashMap<String, Object>();
+
+        try {
+            for (int id : ids) {
+                idMap.put("id", id);
+                deleteAsset(idMap);
+                idMap.remove("id");
+            }
+            return ResponseEntity.badRequest().body(REMOVAL_MSG);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Server issue while deleting data");
+        }
+    }
+
     @GetMapping("/get-assets")
     public List<Map<String, Object>> getAssets() {
         List<Asset> assetsInfo =  assetService.getAllAssets();
