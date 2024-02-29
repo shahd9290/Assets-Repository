@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import "./AssetTable.css"
+import AuditTrail from './AuditTrail';
+
 const Fetch = () => {
+
   const [assets, setAssets] = useState([]);
+  const [aT,setAT] = useState(false);
   useEffect(() => {
     getAssets();
   }, []);
@@ -32,6 +36,8 @@ const Fetch = () => {
         }
     )}
   }
+
+
   return (
     <div>
          <h1> Assets </h1>
@@ -60,7 +66,10 @@ const Fetch = () => {
                          <td>
                              <button className = "delete" 
                              style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
-                             <button className = "auditTrail">Show Audit Trail</button>
+                             <button className = "auditTrail" onClick={()=>setAT(true)}>Show Audit Trail</button>
+                             <AuditTrail trigger={aT} setTrigger={setAT}>
+                                <h1>hello I work</h1>
+                             </AuditTrail>
                          </td>
                      </tr>
                  ))}
