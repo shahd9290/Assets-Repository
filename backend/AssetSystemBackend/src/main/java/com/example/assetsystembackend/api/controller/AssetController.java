@@ -180,17 +180,25 @@ public class AssetController {
         List<Map<String, Object>> assetList = getAssets();
         List<Map<String, Object>> output = new ArrayList<>();
 
+        // no filter, return all assets
+        if (payload.isEmpty())
+            return assetList;
+
         /* Filters:
-        * type
-        * date_before
-        * date_after
-        * user
+         * type
+         * date_before
+         * date_after
+         * user
          */
 
         String type = (String) payload.getOrDefault("type", null);
         Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
+
+        // something in the payload that isn't any of the above filters.
+        if (type == null && date_before == null && date_after == null && user == null)
+            return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
         for (Map<String, Object> asset : assetList) {
