@@ -141,7 +141,8 @@ public class AssetController {
 
             for (Object[] entry : entries) {
                 for (int i = 1; i < columns.size(); i++) {
-                    if (entry[0] == asset.getId()) {
+                    Long id = Long.parseLong(String.valueOf(entry[0]));
+                    if (id == asset.getId()) {
                         assetData.put(columns.get(i), entry[i]);
                     }
                 }
