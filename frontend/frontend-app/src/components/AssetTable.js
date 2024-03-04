@@ -5,10 +5,24 @@ import AuditTrail from './AuditTrail';
 const Fetch = () => {
 
   const [assets, setAssets] = useState([]);
-  const [aT,setAT] = useState(false);
+  const [btn_aT,setBtn_AT] = useState(false);
+  const [aT,setAT]= useState([]);
   useEffect(() => {
     getAssets();
   }, []);
+
+
+  function getAssetTrail(id){
+    setBtn_AT(true)
+    fetch(`http://localhost:8080/audit/log${id}`)
+    .then((trail)=>{
+        return trail.json();
+    })
+    .then((record)=>{
+        console.log(record);
+        setAT(record);
+    })
+  }
 
   function getAssets(){
     fetch('http://localhost:8080/get-assets')
@@ -65,10 +79,14 @@ const Fetch = () => {
                          <td>{asset.type}</td>
                          <td>
                              <button className = "delete" 
-                             style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
-                             <button className = "auditTrail" onClick={()=>setAT(true)}>Show Audit Trail</button>
-                             <AuditTrail trigger={aT} setTrigger={setAT}>
-                                <h1>hello I work</h1>
+                             style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
+                             <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)}>Show Audit Trail</button>
+                             <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
+                                <ul>
+                                    {aT.map((log)=>(
+                                        <li key={log.id}>{log.entry}</li>
+                                    ))}
+                                </ul>
                              </AuditTrail>
                          </td>
                      </tr>
