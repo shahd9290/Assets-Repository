@@ -14,6 +14,7 @@ public class BaseUser {
         this.template = template;
     }
 
+    //admin user
     public void newUser(String username, String password){
         String query = "CREATE USER " + username +
                 " WITH\nLOGIN\nSUPERUSER\nINHERIT\nCREATEDB\nCREATEROLE\nREPLICATION\n ENCRYPTED PASSWORD '"
