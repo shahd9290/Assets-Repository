@@ -172,13 +172,16 @@ public class AssetController {
         Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
+        String search_term = (String) payload.getOrDefault("search_term", null);
 
         // something in the payload that isn't any of the above filters.
-        if (type == null && date_before == null && date_after == null && user == null)
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null)
             return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
         for (Map<String, Object> asset : assetList) {
+            if (search_term != null && !((String) asset.get("name")).contains(search_term))
+                continue;
             if (type != null && !asset.get("type").equals(type))
                 continue;
             if (user != null && !asset.get("creator_name").equals(user))
