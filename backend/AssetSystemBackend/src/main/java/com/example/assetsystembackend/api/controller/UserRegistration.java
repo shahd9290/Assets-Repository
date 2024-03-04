@@ -26,7 +26,7 @@ public class UserRegistration {
     DataSource dataSource;
 
     @Autowired
-    public UserRegistration(JdbcTemplate template, BaseUser user, DataSource dataSource){
+    public UserRegistration(JdbcTemplate template, BaseUser user, DataSource dataSource) {
         this.template = template;
         this.user = user;
         this.dataSource = dataSource;
@@ -38,43 +38,56 @@ public class UserRegistration {
         //check data validity
 
         String username = data.get("username");
-        if (!validUsername(username)) {
+        if (existing(username)) {
+            return ResponseEntity.badRequest().body("Username already exists.");
+        } else if (invalidUsername(username)) {
             return ResponseEntity.badRequest().body("Invalid username.");
         }
 
         String password = data.get("password");
-        if (!checkValidity(password)){
+        if (!checkValidity(password)) {
             return ResponseEntity.badRequest().body("Invalid password.");
         }
 
-//        String level = data.get("user-level");
-//        if (!checkValidity(level)){
-//            return ResponseEntity.badRequest().body("Invalid user level");
-//        }
+        String level = data.get("user-level");
 
-        user.newUser(username, password);
+        switch (level) {
+            case "admin":
+                user.newAdmin(username, password);
+                break;
+            case "general":
+                user.newGeneral(username, password);
+                break;
+            case "viewer":
+                user.newViewer(username, password);
+                break;
+            default:
+                ResponseEntity.badRequest().body("Invalid user request.");
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body("User registered.");
 
     }
 
-    public boolean checkValidity(String data){
+    public boolean checkValidity (String data){
         //add validity checks as necessary
-        return data.length() >= 6;
+        return data.length() > 7;
     }
 
-    public boolean validUsername(String data) throws SQLException {
-        boolean valid;
-        ResultSet rs;
-        try(Connection con = dataSource.getConnection();){
+    public boolean existing (String data) throws SQLException {
+        try (Connection con = dataSource.getConnection();) {
             PreparedStatement ps = con.prepareStatement("select * from pg_roles where rolname = ?");
             ps.setString(1, data);
 
-            rs = ps.executeQuery();
-            return !rs.isBeforeFirst();
+            ResultSet rs = ps.executeQuery();
+            return rs.isBeforeFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean invalidUsername (String username){
+        return username.length() > 7;
     }
 
 }
