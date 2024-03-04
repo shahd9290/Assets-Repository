@@ -96,7 +96,11 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (!dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
+            //backLogService.deleteLog(assetID);
+            boolean assetDeletion = assetService.deleteAsset(assetID);
+            boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
+
+            if (!assetDeletion && !typeDeletion){
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
 

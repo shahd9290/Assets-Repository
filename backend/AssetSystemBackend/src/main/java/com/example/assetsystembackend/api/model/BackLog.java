@@ -12,9 +12,8 @@ public class BackLog {
     @Column(name = "entry_id")
     private Long id;
 
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="asset_id", referencedColumnName = "asset_id", nullable = false)
-    private Asset asset;
+    @Column(name="asset_id")
+    private long assetId;
 
 
     @Column(name = "message")
@@ -22,12 +21,12 @@ public class BackLog {
 
     //User in the future
     
-    public Asset getAsset() {
-        return asset;
+    public long getAssetID() {
+        return assetId;
     }
 
-    public void setAsset(Asset asset) {
-        this.asset = asset;
+    public void setAsset(long asset_id) {
+        this.assetId = asset_id;
     }
 
     public void setId(Long id) {
