@@ -30,6 +30,7 @@ const Fetch = () => {
         return res.json();
         })
         .then((data) => {
+            if (data==null) {return }
             console.log(data);
             setAssets(data);
         });
