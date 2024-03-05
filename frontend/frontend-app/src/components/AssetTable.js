@@ -6,6 +6,8 @@ const Fetch = () => {
 
   const [assets, setAssets] = useState([]);
   const [btn_aT,setBtn_AT] = useState(false);
+  const [btn_gAT, setBtn_gAT] = useState(false);
+  const [gAT,setGAT]=useState([]);
   const [aT,setAT]= useState([]);
   useEffect(() => {
     getAssets();
@@ -19,11 +21,24 @@ const Fetch = () => {
         return trail.json();
     })
     .then((record)=>{
+        if (record==null) {return }
         console.log(record);
         setAT(record);
     })
   }
 
+  function getGTA(){
+    setBtn_gAT(true)
+    fetch('http://localhost:8080/audit/logs')
+    .then((res) => {
+        return res.json();
+        })
+        .then((gRecord) => {
+            if (gRecord==null) {return }
+            console.log(gRecord);
+            setGAT(gRecord);
+        });
+  }
   function getAssets(){
     fetch('http://localhost:8080/get-assets')
     .then((res) => {
@@ -56,6 +71,14 @@ const Fetch = () => {
   return (
     <div>
          <h1> Assets </h1>
+         <button className='gAT' onClick={()=>getGTA()}>General Audit Trail</button>
+         <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
+         <ul>
+            {gAT.map((gLog)=>(
+                <li key={gLog.id}>{gLog.entry}</li>
+            ))}
+        </ul>
+         </AuditTrail>
          <table>
              <thead>
                  <tr>

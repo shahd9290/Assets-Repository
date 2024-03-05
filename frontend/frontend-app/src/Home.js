@@ -13,6 +13,7 @@ function Home() {
         <Routes>
             <Route path='/create-assets' element={<App/>} />
             <Route path='/create-types' element={<Types/>} />
+            <Route path='/' element={<AssetTable/>} />
             <Route path='/assets' element={<AssetTable/>} />
             <Route path='/register-user' element={<NewUser/>} />
         </Routes>

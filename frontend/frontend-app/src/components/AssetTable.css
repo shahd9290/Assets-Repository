@@ -41,3 +41,8 @@ table tr:nth-child(even) {
   .delete:hover{
     background-color: crimson;
   }
+  .gAT{
+    position: absolute;
+    top: 55px;
+    right: 16px;
+  }
