@@ -17,6 +17,10 @@ function NewUser() {
           <p></p>
           <input type="text" id="lastName" name="lastN" required/>
           <p></p>
+          <label for="email">Enter your email address:</label>
+          <p></p>
+          <input type="text" id="email" name="email" required/>
+          <p></p>
           <label for="userName">Enter a new username:</label>
           <p></p>
           <input type="text" id="userName" name="user" required/>
@@ -24,6 +28,13 @@ function NewUser() {
           <label for="passWord">Enter your password:</label>
           <p></p>
           <input type="password" id="passWord" name="pass" required/>
+          <p></p>
+          <label for="user-type">User Type:</label>
+          <p></p>
+          <select id="user-type" name="type" required value = " --Any--">
+            <option>User</option>
+            <option>Admin</option>
+          </select>
           <p></p>
           <button type="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
         </form>
