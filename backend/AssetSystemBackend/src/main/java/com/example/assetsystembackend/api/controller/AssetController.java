@@ -2,6 +2,7 @@ package com.example.assetsystembackend.api.controller;
 
 import com.example.assetsystembackend.api.model.Asset;
 import com.example.assetsystembackend.api.service.AssetService;
+import com.example.assetsystembackend.api.service.BackLogService;
 import com.example.assetsystembackend.api.service.DynamicService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class AssetController {
 
     private final AssetService assetService;
     private final DynamicService dynamicService;
+    private final BackLogService backLogService;
 
     public static final String INVALID_ID_MSG = "Invalid ID!";
     public static final String SUCCESS_MSG = "Insertion successful!";
@@ -26,9 +28,10 @@ public class AssetController {
 
 
     @Autowired
-    public AssetController(AssetService assetService, DynamicService dynamicService){
+    public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService){
         this.assetService = assetService;
         this.dynamicService = dynamicService;
+        this.backLogService = backLogService;
     }
 
 
@@ -74,6 +77,7 @@ public class AssetController {
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
+        backLogService.addAssetCreation(newAsset);
 
         return ResponseEntity.ok(SUCCESS_MSG);
     }
@@ -93,7 +97,11 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (!dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
+            //backLogService.deleteLog(assetID);
+            boolean assetDeletion = assetService.deleteAsset(assetID);
+            boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
+
+            if (!assetDeletion && !typeDeletion){
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
 
