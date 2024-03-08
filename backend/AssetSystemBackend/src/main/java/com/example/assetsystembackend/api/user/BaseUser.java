@@ -29,6 +29,7 @@ public class BaseUser {
     }
 
     public void newViewer(String username, String password){
-        String query = "CREATE USER " + username + " WITH ENCYPTED PASSWORD '" + password + "';"
+        String query = "CREATE USER " + username + " WITH ENCRYPTED PASSWORD '" + password + "';";
+        template.execute(query);
     }
 }
