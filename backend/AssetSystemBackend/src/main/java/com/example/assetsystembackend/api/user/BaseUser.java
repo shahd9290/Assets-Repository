@@ -15,10 +15,20 @@ public class BaseUser {
     }
 
     //admin user
-    public void newUser(String username, String password){
+    public void newAdmin(String username, String password){
         String query = "CREATE USER " + username +
-                " WITH\nLOGIN\nSUPERUSER\nINHERIT\nCREATEDB\nCREATEROLE\nREPLICATION\n ENCRYPTED PASSWORD '"
-                + password + "';\nGRANT pg_signal_backend TO " + username + " WITH ADMIN OPTION;";
+                " WITH\nSUPERUSER\nINHERIT\nCREATEDB\nCREATEROLE\nREPLICATION\n ENCRYPTED PASSWORD '"
+                + password + "';\nGRANT ALL TO " + username + " WITH ADMIN OPTION;";
         template.execute(query);
+    }
+
+    public void newGeneral(String username, String password){
+        String query = "CREATE USER " + username +
+                " WITH ENCRYPTED PASSWORD '" + password + "';";
+        template.execute(query);
+    }
+
+    public void newViewer(String username, String password){
+        String query = "CREATE USER " + username + " WITH ENCYPTED PASSWORD '" + password + "';"
     }
 }
