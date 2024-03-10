@@ -1,0 +1,40 @@
+
+.search_results{
+    display: flex;
+    align-items: center;
+}
+.searchbar-main-container {
+    border: 1px solid black;
+    margin: 1rem;
+
+    text-align: center;
+  }
+  
+  .sub-container {
+    display: inline-block;
+    vertical-align: middle;
+    width: fit-content;
+  }
+  .sub-container:first-child{
+    align-items: end;
+  }
+  .sub-container:nth-child(2){
+    margin-right: 2px;
+    width: 250px;
+    align-items: center;
+  }
+
+  input{
+    width: 30vw;
+    margin-left: 1px;
+    align-items: flex-start;
+    border: none;
+  }
+
+  input:focus{
+    outline: none;
+  }
+  #dd{
+    outline: none;
+  }
+

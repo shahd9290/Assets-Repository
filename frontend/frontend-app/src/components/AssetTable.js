@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import "./AssetTable.css"
 import AuditTrail from './AuditTrail';
+import SearchBar from './AssetSearchBar';
+
 
 const Fetch = () => {
 
@@ -69,8 +71,11 @@ const Fetch = () => {
 
 
   return (
-    <div>
+    <div className='main_container'>
          <h1> Assets </h1>
+         <div className='searchbar-wrapper'>
+            <SearchBar/>
+        </div>
          <button className='gAT' onClick={()=>getGTA()}>General Audit Trail</button>
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
          <ul>
@@ -79,15 +84,16 @@ const Fetch = () => {
             ))}
         </ul>
          </AuditTrail>
+         <div className='table-container'>
          <table>
              <thead>
                  <tr>
-                    <th>ID </th>
                      <th>Title</th>
                      <th>Link</th>
                      <th>Creator</th>
                      <th>Date</th>
                      <th>Type</th>
+                     <th>Description</th>
                      <th>Actions</th>
                  </tr>
              </thead>
@@ -95,28 +101,36 @@ const Fetch = () => {
                  {
                  assets.map((asset) =>(
                      <tr key={asset.id}>
-                        <td>{asset.id}</td>
                          <td>{asset.title}</td>
                          <td>{asset.link}</td>
                          <td>{asset.creator}</td>
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
+                         <td>{asset.description}</td>
                          <td>
-                             <button className = "delete" 
-                             style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
-                             <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)}>Show Audit Trail</button>
-                             <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
-                                <ul>
-                                    {aT.map((log)=>(
-                                        <li key={log.id}>{log.entry}</li>
-                                    ))}
-                                </ul>
-                             </AuditTrail>
+                            <td className='d-row'>
+                                <button className = "delete" 
+                                style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
+                            </td>
+
+                             <td className='at-row'>
+                                <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)}>Audit Trail</button>
+                                <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
+                                    <ul>
+                                        {aT.map((log)=>(
+                                            <li key={log.id}>{log.entry}</li>
+                                        ))}
+                                    </ul>
+                                </AuditTrail>
+                             </td>
+                             
                          </td>
                      </tr>
                  ))}
              </tbody>
          </table>
+         </div>
+
     </div>
  
    );
