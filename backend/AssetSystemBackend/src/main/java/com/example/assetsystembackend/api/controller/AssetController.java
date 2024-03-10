@@ -3,6 +3,7 @@ package com.example.assetsystembackend.api.controller;
 import com.example.assetsystembackend.api.model.Asset;
 import com.example.assetsystembackend.api.service.AssetService;
 import com.example.assetsystembackend.api.service.DynamicService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -164,7 +165,8 @@ public class AssetController {
 
             for (Object[] entry : entries) {
                 for (int i = 1; i < columns.size(); i++) {
-                    if (entry[0] == asset.getId()) {
+                    Long id = Long.parseLong(String.valueOf(entry[0]));
+                    if (id == asset.getId()) {
                         assetData.put(columns.get(i), entry[i]);
                     }
                 }
@@ -174,5 +176,47 @@ public class AssetController {
 
         return output;
     }
+    @GetMapping("/search")
+    public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
+        List<Map<String, Object>> assetList = getAssets();
+        List<Map<String, Object>> output = new ArrayList<>();
 
+        // no filter, return all assets
+        if (payload.isEmpty())
+            return assetList;
+
+        /* Filters:
+         * type
+         * date_before
+         * date_after
+         * user
+         */
+
+        String type = (String) payload.getOrDefault("type", null);
+        Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
+        Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
+        String user = (String) payload.getOrDefault("user", null);
+        String search_term = (String) payload.getOrDefault("search_term", null);
+
+        // something in the payload that isn't any of the above filters.
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null)
+            return assetList;
+
+        // Check condition. If condition is false restart loop and don't add to output.
+        for (Map<String, Object> asset : assetList) {
+            if (search_term != null && !((String) asset.get("name")).contains(search_term))
+                continue;
+            if (type != null && !asset.get("type").equals(type))
+                continue;
+            if (user != null && !asset.get("creator_name").equals(user))
+                continue;
+            if (date_before != null && !date_before.after((Date) asset.get("creation_date")))
+                continue;
+            if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
+                continue;
+            output.add(asset);
+        }
+
+        return output;
+    }
 }
