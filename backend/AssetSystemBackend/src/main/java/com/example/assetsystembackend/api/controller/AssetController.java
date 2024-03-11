@@ -159,7 +159,7 @@ public class AssetController {
 
         return output;
     }
-    @GetMapping("/search")
+    @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();
         List<Map<String, Object>> output = new ArrayList<>();

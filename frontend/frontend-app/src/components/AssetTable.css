@@ -41,6 +41,7 @@ table tr:nth-child(even) {
   table tr:hover {
     background-color: #e1dddd;
   }
+
   h1 {
     text-align: center;
   }
@@ -59,4 +60,12 @@ table tr:nth-child(even) {
 
   .d-row,.at-row{
     border-bottom: none;
+  }
+
+  table tr:last-child{
+    border-bottom: none;
+  }
+
+  .searchbar-wrapper{
+    margin-left: 300px;
   }

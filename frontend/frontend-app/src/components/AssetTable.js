@@ -11,6 +11,7 @@ const Fetch = () => {
   const [btn_gAT, setBtn_gAT] = useState(false);
   const [gAT,setGAT]=useState([]);
   const [aT,setAT]= useState([]);
+  
   useEffect(() => {
     getAssets();
   }, []);
@@ -42,7 +43,10 @@ const Fetch = () => {
         });
   }
   function getAssets(){
-    fetch('http://localhost:8080/get-assets')
+    fetch('http://localhost:8080/search',
+    {method:'POST',
+    headers:{"Content-Type": "application/json"},
+    body:JSON.stringify({})})
     .then((res) => {
         return res.json();
         })
