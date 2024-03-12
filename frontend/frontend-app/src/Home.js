@@ -9,7 +9,7 @@ function Home() {
 
 
   return (
-    <div>
+    <div >
         <Navbar />
         <Routes>
             <Route path='/register-user' element={<NewUser/>} />
@@ -17,7 +17,7 @@ function Home() {
             <Route path='/create-assets' element={<App/>} />
             <Route path='/create-types' element={<Types/>} />
             <Route path='/assets' element={<AssetTable/>} />
-        </Routes>
+            </Routes>
 
     </div>
   );

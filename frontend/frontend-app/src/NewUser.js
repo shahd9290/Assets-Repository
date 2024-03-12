@@ -2,7 +2,7 @@ import './App.css';
 
 function NewUser() {
   return (
-    <div className="NewUser">
+    <div className="NewUser" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
         <title>User Registration</title>
       </head>

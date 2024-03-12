@@ -3,9 +3,9 @@ import './App.css';
 
 function Types() {
   return (
-    <div className="App">
+    <div className="App" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
-        <title>Type Management System</title>
+        <h1>Type Management System</h1>
       </head>
       <body>
         <h1>Create New Type</h1>

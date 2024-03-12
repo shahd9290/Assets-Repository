@@ -19,7 +19,7 @@ form, .button-container {
 label, select, input, textarea {
     display: block;
     align-items: center;
-    width: 60%;
+    width: 45%;
     margin: 10px 225px;
     padding: 8px;
 }

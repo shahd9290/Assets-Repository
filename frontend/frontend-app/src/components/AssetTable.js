@@ -30,7 +30,7 @@ const Fetch = () => {
     )
   }
   return (
-    <div>
+    <div style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
          <h1> Assets </h1>
          <table>
              <thead>
@@ -55,7 +55,7 @@ const Fetch = () => {
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
                          <td>
-                             <button className = "btn btn-danger" 
+                             <button className = "btn btn-danger"
                              style = {{marginLeft:"10px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
                          </td>
                      </tr>
@@ -63,7 +63,7 @@ const Fetch = () => {
              </tbody>
          </table>
     </div>
- 
+
    );
 };
 export default Fetch;
