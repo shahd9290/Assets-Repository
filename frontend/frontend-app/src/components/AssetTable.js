@@ -11,10 +11,15 @@ const Fetch = () => {
   const [btn_gAT, setBtn_gAT] = useState(false);
   const [gAT,setGAT]=useState([]);
   const [aT,setAT]= useState([]);
-  
+  const[sTerm,setSTerm] = useState(null);
+  const[sType,setSType] = useState(null);
+  const[sUser,setSUser] = useState(null);
+  const[sDa,setSDa]= useState('12/04/2020');
+  const[sDb,setSDb]= useState('12/04/2020');
+
   useEffect(() => {
-    getAssets();
-  }, []);
+    retrieveAssets();
+  }, );
 
 
   function getAssetTrail(id){
@@ -42,16 +47,21 @@ const Fetch = () => {
             setGAT(gRecord);
         });
   }
-  function getAssets(){
+  function retrieveAssets(){
+    if(sTerm===""){setSTerm(null)}
+    if(sType===""){setSType(null)}
+    if(sUser===""){setSUser(null)}
     fetch('http://localhost:8080/search',
     {method:'POST',
-    headers:{"Content-Type": "application/json"},
-    body:JSON.stringify({})})
+    headers: { 'Content-Type': 'application/json' },
+    body:JSON.stringify({"search_term":sTerm,
+                         "type":sType,
+                         "user":sUser})})
     .then((res) => {
         return res.json();
         })
         .then((data) => {
-            if (data==null) {return }
+            if (data==null) {return"" }
             console.log(data);
             setAssets(data);
         });
@@ -67,7 +77,7 @@ const Fetch = () => {
             .then((response)=>{
                 console.warn(response);
                 alert(response);
-                getAssets()
+                retrieveAssets()
             })
         }
     )}
@@ -78,7 +88,7 @@ const Fetch = () => {
     <div className='main_container'>
          <h1> Assets </h1>
          <div className='searchbar-wrapper'>
-            <SearchBar/>
+            <SearchBar sn={setSTerm} st={setSType} su={setSUser} sda={setSDa} sdb={setSDb}/>
         </div>
          <button className='gAT' onClick={()=>getGTA()}>General Audit Trail</button>
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
@@ -103,7 +113,7 @@ const Fetch = () => {
              </thead>
              <tbody>
                  {
-                 assets.map((asset) =>(
+                 assets && assets.map((asset) =>(
                      <tr key={asset.id}>
                          <td>{asset.title}</td>
                          <td>{asset.link}</td>

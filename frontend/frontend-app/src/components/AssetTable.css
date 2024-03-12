@@ -68,4 +68,5 @@ table tr:nth-child(even) {
 
   .searchbar-wrapper{
     margin-left: 300px;
+    z-index: 1;
   }
