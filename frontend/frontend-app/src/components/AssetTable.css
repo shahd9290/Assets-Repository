@@ -4,6 +4,7 @@
     display: flex;
     align-items: auto;
     margin-top: -10px;
+    z-index: 2;
  }
  table {
     display:block;

@@ -1,4 +1,5 @@
 
+
 import './AssetSearchBar.css';
 import 'react-dropdown/style.css';
 
@@ -19,16 +20,6 @@ function SearchBar(props){
                 <p>User: </p>
                 <input className='search-by-user' placeholder="input name of user to search" 
                 onChange={event=>{props.su(event.target.value)}}/>
-            </div>
-            <div className="sub-container">
-                <p>date after: </p>
-                <input className='search-by-da' placeholder="input date asset was created after" 
-                 onChange={event=>{props.sda(event.target.value)}}/>
-            </div>
-            <div className="sub-container">
-                <p>date before: </p>
-                <input className='search-by-db' placeholder="input date asset was created before" 
-                 onChange={event=>{props.sdb(event.target.value)}}/>
             </div>
             {props.children}
         </div>

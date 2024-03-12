@@ -24,7 +24,7 @@
   }
 
   .searchbar-main-container:hover{
-    height: 260px;
+    height: 160px;
   }
   input:focus{
     outline: none;

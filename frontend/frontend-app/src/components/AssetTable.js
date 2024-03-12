@@ -14,8 +14,7 @@ const Fetch = () => {
   const[sTerm,setSTerm] = useState(null);
   const[sType,setSType] = useState(null);
   const[sUser,setSUser] = useState(null);
-  const[sDa,setSDa]= useState('12/04/2020');
-  const[sDb,setSDb]= useState('12/04/2020');
+ 
 
   useEffect(() => {
     retrieveAssets();
@@ -88,7 +87,7 @@ const Fetch = () => {
     <div className='main_container'>
          <h1> Assets </h1>
          <div className='searchbar-wrapper'>
-            <SearchBar sn={setSTerm} st={setSType} su={setSUser} sda={setSDa} sdb={setSDb}/>
+            <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
         </div>
          <button className='gAT' onClick={()=>getGTA()}>General Audit Trail</button>
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
