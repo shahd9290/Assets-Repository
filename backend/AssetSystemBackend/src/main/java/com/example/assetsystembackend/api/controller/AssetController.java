@@ -49,6 +49,12 @@ public class AssetController {
         Map<String, String> assetData = (Map<String, String>) payload.get("asset");
         Map<String, Object> typeData = (Map<String, Object>) payload.get("type");
 
+        // Parent ID must belong to an asset in the table.
+        String parentIDString = String.valueOf(assetData.getOrDefault("parent_id", null));
+        Long parent_id = !parentIDString.equals("null") ? Long.valueOf(parentIDString) : null;
+        if (parent_id != null && !assetService.exists(parent_id))
+            return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+
         // Get the current date
         LocalDate currentDate = LocalDate.now();
         Date date = Date.valueOf(currentDate);
@@ -72,7 +78,7 @@ public class AssetController {
         String description = assetData.getOrDefault("description", null);
         String link = assetData.getOrDefault("link", null);
 
-        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link);
+        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id);
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
