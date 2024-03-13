@@ -13,3 +13,6 @@ Current error is data missing which is reffering to certain field which are not 
 
 29/02/2024 - 
 Postman works correctly to insert data via the add asset method within the backend assetConntroller class , however frontend is stating missing data still , attempt to hardcode data has not worked and only brought more errors.
+
+12/03/2024 - 
+Edit button is successfully in the table , and seperate page is created . However issues with the onclick function to a prefilled form and filling the form
