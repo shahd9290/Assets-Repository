@@ -27,7 +27,7 @@ public class AssetController {
 
 
     @Autowired
-    public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService){
+    public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService) {
         this.assetService = assetService;
         this.dynamicService = dynamicService;
         this.backLogService = backLogService;
@@ -40,7 +40,7 @@ public class AssetController {
         "type" : {type fields}
      */
     @PostMapping("/add-new-asset")
-    public ResponseEntity<String> addAsset(@RequestBody  Map<String, Object> payload) {
+    public ResponseEntity<String> addAsset(@RequestBody Map<String, Object> payload) {
         //check data is compatible
         if (!payload.containsKey("asset") || !payload.containsKey("type"))
             return ResponseEntity.badRequest().body(MISSING_DATA_MSG);
@@ -68,9 +68,9 @@ public class AssetController {
         // Check if columns keys are actual columns in the table
         else {
             List<String> columns = dynamicService.getTableColumns(type);
-            for (int i = 1; i<columns.size(); i++) {
+            for (int i = 1; i < columns.size(); i++) {
                 if (!typeData.containsKey(columns.get(i))) {
-                    return ResponseEntity.badRequest().body(INVALID_TYPE_MSG +"\nEnsure the Type contains the specified columns.");
+                    return ResponseEntity.badRequest().body(INVALID_TYPE_MSG + "\nEnsure the Type contains the specified columns.");
                 }
             }
         }
@@ -88,7 +88,7 @@ public class AssetController {
     }
 
     @DeleteMapping("/delete-asset")
-    public ResponseEntity<String> deleteAsset(@RequestBody  Map<String, Object> payload) {
+    public ResponseEntity<String> deleteAsset(@RequestBody Map<String, Object> payload) {
         if (!payload.containsKey("id"))
             return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
 
@@ -106,13 +106,12 @@ public class AssetController {
             boolean assetDeletion = assetService.deleteAsset(assetID);
             boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
 
-            if (!assetDeletion && !typeDeletion){
+            if (!assetDeletion && !typeDeletion) {
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
 
             return ResponseEntity.ok(REMOVAL_MSG);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Server issue while deleting data");
         }
@@ -120,7 +119,7 @@ public class AssetController {
 
     @GetMapping("/get-assets")
     public List<Map<String, Object>> getAssets() {
-        List<Asset> assetsInfo =  assetService.getAllAssets();
+        List<Asset> assetsInfo = assetService.getAllAssets();
         ListIterator<Asset> assetIterator = assetsInfo.listIterator();
 
         Map<String, List<String>> typeColumns = new HashMap<>();
@@ -141,6 +140,7 @@ public class AssetController {
             assetData.put("description", asset.getDescription());
             assetData.put("type", type);
             assetData.put("link", asset.getLink());
+            assetData.put("parent_id", asset.getParent_id());
 
             // Prevents requesting for certain types repeatedly
             if (!typeColumns.containsKey(type) || !typeDataMap.containsKey(type)) {
@@ -186,9 +186,11 @@ public class AssetController {
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
         String search_term = (String) payload.getOrDefault("search_term", null);
+        Long parent_id = ((Integer) payload.getOrDefault("parent_id", null)).longValue();
+
 
         // something in the payload that isn't any of the above filters.
-        if (type == null && date_before == null && date_after == null && user == null && search_term == null)
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == null)
             return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
@@ -202,6 +204,8 @@ public class AssetController {
             if (date_before != null && !date_before.after((Date) asset.get("creation_date")))
                 continue;
             if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
+                continue;
+            if (asset.get("parent_id") != parent_id)
                 continue;
             output.add(asset);
         }
