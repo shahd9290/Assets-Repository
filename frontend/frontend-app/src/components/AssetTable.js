@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import "./AssetTable.css"
 import AuditTrail from './AuditTrail';
 import SearchBar from './AssetSearchBar';
+import AssetRelationships from './AssetRelationships';
+import { AiOutlineAudit } from "react-icons/ai";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { TbCirclesRelation } from "react-icons/tb";
 
 
 const Fetch = () => {
@@ -14,7 +18,8 @@ const Fetch = () => {
   const[sTerm,setSTerm] = useState(null);
   const[sType,setSType] = useState(null);
   const[sUser,setSUser] = useState(null);
- 
+  const [btn_RA,setBtn_RA] = useState(false);
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     retrieveAssets();
@@ -82,6 +87,9 @@ const Fetch = () => {
     )}
   }
 
+  function getRA(){
+    setBtn_RA(true)
+  }
 
   return (
     <div className='main_container'>
@@ -89,7 +97,8 @@ const Fetch = () => {
          <div className='searchbar-wrapper'>
             <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
         </div>
-         <button className='gAT' onClick={()=>getGTA()}>General Audit Trail</button>
+         <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
+            { hidden ?null:<label>General Audit Trail</label>}
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
          <ul>
             {gAT.map((gLog)=>(
@@ -123,11 +132,11 @@ const Fetch = () => {
                          <td>
                             <td className='d-row'>
                                 <button className = "delete" 
-                                style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)} > Delete</button>
+                                style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
                             </td>
 
                              <td className='at-row'>
-                                <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)}>Audit Trail</button>
+                                <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
                                 <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
                                     <ul>
                                         {aT.map((log)=>(
@@ -135,6 +144,10 @@ const Fetch = () => {
                                         ))}
                                     </ul>
                                 </AuditTrail>
+                             </td>
+                             <td>
+                                <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
+                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA}/>
                              </td>
                              
                          </td>

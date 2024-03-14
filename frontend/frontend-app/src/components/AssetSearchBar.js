@@ -1,7 +1,6 @@
 
 
 import './AssetSearchBar.css';
-import 'react-dropdown/style.css';
 
 function SearchBar(props){
     return(
