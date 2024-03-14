@@ -19,7 +19,7 @@ const Fetch = () => {
   const[sType,setSType] = useState(null);
   const[sUser,setSUser] = useState(null);
   const [btn_RA,setBtn_RA] = useState(false);
-  const [hidden, setHidden] = useState(true);
+  const [asset1, setAsset1]  = useState('Node 1');
 
   useEffect(() => {
     retrieveAssets();
@@ -98,7 +98,6 @@ const Fetch = () => {
             <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
         </div>
          <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
-            { hidden ?null:<label>General Audit Trail</label>}
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
          <ul>
             {gAT.map((gLog)=>(
@@ -121,6 +120,7 @@ const Fetch = () => {
              </thead>
              <tbody>
                  {
+                    //intialising and filling the table from the database
                  assets && assets.map((asset) =>(
                      <tr key={asset.id}>
                          <td>{asset.title}</td>
@@ -145,9 +145,9 @@ const Fetch = () => {
                                     </ul>
                                 </AuditTrail>
                              </td>
-                             <td>
+                             <td onMouseEnter={()=>setAsset1(asset.title)}>
+                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childName={asset1} parentName='test_1.mp3'/>
                                 <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
-                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA}/>
                              </td>
                              
                          </td>
