@@ -10,6 +10,7 @@ import { TbCirclesRelation } from "react-icons/tb";
 
 const Fetch = () => {
 
+  //creating the states that need to be kept track off as the website deals with requests
   const [assets, setAssets] = useState([]);
   const [btn_aT,setBtn_AT] = useState(false);
   const [btn_gAT, setBtn_gAT] = useState(false);
@@ -25,7 +26,7 @@ const Fetch = () => {
     retrieveAssets();
   }, );
 
-
+  //retrieving the audit trail for a specific asset from the backend
   function getAssetTrail(id){
     setBtn_AT(true)
     fetch(`http://localhost:8080/audit/log${id}`)
@@ -39,6 +40,7 @@ const Fetch = () => {
     })
   }
 
+   //retrieving the audit trail for all assets 
   function getGTA(){
     setBtn_gAT(true)
     fetch('http://localhost:8080/audit/logs')
@@ -51,6 +53,8 @@ const Fetch = () => {
             setGAT(gRecord);
         });
   }
+
+  //retriving all assets from the backend 
   function retrieveAssets(){
     if(sTerm===""){setSTerm(null)}
     if(sType===""){setSType(null)}
@@ -70,6 +74,8 @@ const Fetch = () => {
             setAssets(data);
         });
   }
+
+  //using the delete endpoint to delete assets from both backend and frontend
   function deleteBtn(id){
     if(window.confirm("Are you sure you want to delete this asset?")){
         fetch('http://localhost:8080/delete-asset',
@@ -87,6 +93,7 @@ const Fetch = () => {
     )}
   }
 
+  //displaying the popup window to show the related assets graphic
   function getRA(){
     setBtn_RA(true)
   }
@@ -120,7 +127,7 @@ const Fetch = () => {
              </thead>
              <tbody>
                  {
-                    //intialising and filling the table from the database
+                 //intialising and filling the table from the database
                  assets && assets.map((asset) =>(
                      <tr key={asset.id}>
                          <td>{asset.title}</td>
