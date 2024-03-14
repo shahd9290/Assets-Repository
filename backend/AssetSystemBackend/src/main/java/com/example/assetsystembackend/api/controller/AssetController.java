@@ -2,6 +2,7 @@ package com.example.assetsystembackend.api.controller;
 
 import com.example.assetsystembackend.api.model.Asset;
 import com.example.assetsystembackend.api.service.AssetService;
+import com.example.assetsystembackend.api.service.BackLogService;
 import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ public class AssetController {
 
     private final AssetService assetService;
     private final DynamicService dynamicService;
+    private final BackLogService backLogService;
 
     public static final String INVALID_ID_MSG = "Invalid ID!";
     public static final String SUCCESS_MSG = "Insertion successful!";
@@ -25,9 +27,10 @@ public class AssetController {
 
 
     @Autowired
-    public AssetController(AssetService assetService, DynamicService dynamicService){
+    public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService){
         this.assetService = assetService;
         this.dynamicService = dynamicService;
+        this.backLogService = backLogService;
     }
 
 
@@ -73,6 +76,7 @@ public class AssetController {
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
+        backLogService.addAssetCreation(newAsset);
 
         return ResponseEntity.ok(SUCCESS_MSG);
     }
@@ -92,35 +96,15 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            if (dynamicService.deleteData(typeName, assetID) && assetService.deleteAsset(assetID)){
-                return ResponseEntity.ok(REMOVAL_MSG);
+            //backLogService.deleteLog(assetID);
+            boolean assetDeletion = assetService.deleteAsset(assetID);
+            boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
+
+            if (!assetDeletion && !typeDeletion){
+                return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
 
-            return ResponseEntity.badRequest().body(INVALID_ID_MSG);
-
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Server issue while deleting data");
-        }
-    }
-
-    @DeleteMapping("/bulk-delete")
-    public ResponseEntity<String> bulkDelete(@RequestBody  Map<String, Object> payload) {
-        if (!payload.containsKey("ids"))
-            return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
-
-        ArrayList<Integer> ids = (ArrayList<Integer>) payload.get("ids");
-
-        Map<String, Object> idMap = new HashMap<String, Object>();
-
-        try {
-            for (int id : ids) {
-                idMap.put("id", id);
-                deleteAsset(idMap);
-                idMap.remove("id");
-            }
-            return ResponseEntity.badRequest().body(REMOVAL_MSG);
+            return ResponseEntity.ok(REMOVAL_MSG);
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -164,7 +148,8 @@ public class AssetController {
 
             for (Object[] entry : entries) {
                 for (int i = 1; i < columns.size(); i++) {
-                    if (entry[0] == asset.getId()) {
+                    Long id = Long.parseLong(String.valueOf(entry[0]));
+                    if (id == asset.getId()) {
                         assetData.put(columns.get(i), entry[i]);
                     }
                 }
@@ -174,5 +159,47 @@ public class AssetController {
 
         return output;
     }
+    @PostMapping("/search")
+    public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
+        List<Map<String, Object>> assetList = getAssets();
+        List<Map<String, Object>> output = new ArrayList<>();
 
+        // no filter, return all assets
+        if (payload.isEmpty())
+            return assetList;
+
+        /* Filters:
+         * type
+         * date_before
+         * date_after
+         * user
+         */
+
+        String type = (String) payload.getOrDefault("type", null);
+        Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
+        Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
+        String user = (String) payload.getOrDefault("user", null);
+        String search_term = (String) payload.getOrDefault("search_term", null);
+
+        // something in the payload that isn't any of the above filters.
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null)
+            return assetList;
+
+        // Check condition. If condition is false restart loop and don't add to output.
+        for (Map<String, Object> asset : assetList) {
+            if (search_term != null && !((String) asset.get("name")).contains(search_term))
+                continue;
+            if (type != null && !asset.get("type").equals(type))
+                continue;
+            if (user != null && !asset.get("creator_name").equals(user))
+                continue;
+            if (date_before != null && !date_before.after((Date) asset.get("creation_date")))
+                continue;
+            if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
+                continue;
+            output.add(asset);
+        }
+
+        return output;
+    }
 }

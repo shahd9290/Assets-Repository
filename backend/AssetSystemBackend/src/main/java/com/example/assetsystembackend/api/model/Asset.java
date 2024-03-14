@@ -43,6 +43,10 @@ public class Asset {
     public Asset() { //Constructor required
     }
 
+    public Asset(long id) { //Constructor required
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
