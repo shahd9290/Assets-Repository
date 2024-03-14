@@ -59,7 +59,7 @@ table tr:nth-child(even) {
     right: 16px;
   }
 
-  .d-row,.at-row{
+  table td td{
     border-bottom: none;
   }
 

@@ -1,7 +1,6 @@
 
 
 import './AssetSearchBar.css';
-import 'react-dropdown/style.css';
 
 function SearchBar(props){
     return(
@@ -9,7 +8,7 @@ function SearchBar(props){
             <div className='sub-container'>
                 <p>Asset Name: </p>
                 <input className='search-by-name' placeholder="input asset name to search" 
-                 onChange={event=>{props.sn(event.target.value)}}/>
+                 onChange={event=>{props.sn(event.target.value)}}/> 
             </div>
             <div className="sub-container">
                 <p>Type: </p>
