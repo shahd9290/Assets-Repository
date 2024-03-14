@@ -31,10 +31,12 @@ public class AssetService {
     }
 
     public boolean deleteAsset(Long id) {
-        if (assetsRepo.existsById(id)) {
+        if (exists(id)) {
             assetsRepo.deleteById(id);
             return true;
         }
         return false;
     }
+
+    public boolean exists (Long id) {return assetsRepo.existsById(id);}
 }
