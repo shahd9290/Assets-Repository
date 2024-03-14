@@ -6,9 +6,10 @@ import AssetRelationships from './AssetRelationships';
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { TbCirclesRelation } from "react-icons/tb";
+import { FiEdit } from "react-icons/fi";
 
 
-const Fetch = () => {
+const Fetch = ({ onEdit }) => {
 
   //creating the states that need to be kept track off as the website deals with requests
   const [assets, setAssets] = useState([]);
@@ -77,7 +78,6 @@ const Fetch = () => {
 
   //using the delete endpoint to delete assets from both backend and frontend
   function deleteBtn(id){
-<<<<<<< HEAD
     if(window.confirm("Are you sure you want to delete this asset?")){
         fetch('http://localhost:8080/delete-asset',
         {method :'DELETE', 
@@ -142,7 +142,9 @@ const Fetch = () => {
                                 <button className = "delete" 
                                 style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
                             </td>
-
+                            <td className='e-row'>
+                              <button className="btn" ><FiEdit /></button>
+                            </td>
                              <td className='at-row'>
                                 <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
                                 <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
@@ -165,59 +167,8 @@ const Fetch = () => {
          </table>
          </div>
 
-=======
-    fetch('http://localhost:8080/delete-asset', {
-      method: 'DELETE',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ "id": id })
-    })
-    .then((response) => {
-      if(response.ok) {
-        getAssets(); // Refresh the list after deletion
-      } else {
-        alert("Error deleting the asset");
-      }
-    })
-    .catch((error) => console.error('Error:', error));
-  }
-
-  return (
-    <div>
-      <h1>Assets</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Link</th>
-            <th>Creator</th>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {assets.map((asset) => (
-            <tr key={asset.id}>
-              <td>{asset.id}</td>
-              <td>{asset.title}</td>
-              <td>{asset.link}</td>
-              <td>{asset.creator}</td>
-              <td>{asset.creation_date}</td>
-              <td>{asset.type}</td>
-              <td>
-                <button className="btn" style={{ marginRight: "10px" }} onClick={() => onEdit(asset)}>Edit</button>
-                <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => deleteBtn(asset.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
->>>>>>> asset-connection
     </div>
   );
 };
 
-export default AssetTable;
+export default Fetch;
