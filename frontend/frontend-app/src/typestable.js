@@ -31,7 +31,6 @@ const Fetch = () => {
                     <tr>
                         <th>Title</th>
                         <th>Columns</th>
-                        <th>Creator</th>
                     </tr>
                 </thead>
                 <tbody>
