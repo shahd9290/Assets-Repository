@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import "./AssetTable.css";
 
-const Fetch = () => {
+const AssetTable = ({ onEdit }) => { 
   const [assets, setAssets] = useState([]);
-  
+
   useEffect(() => {
     getAssets();
   }, []);
 
-  function getAssets(){
+  function getAssets() {
     fetch('http://localhost:8080/get-assets')
     .then((res) => res.json())
     .then((data) => {
@@ -33,12 +33,6 @@ const Fetch = () => {
       }
     })
     .catch((error) => console.error('Error:', error));
-  }
-
-  function editBtn(id){
-    // Placeholder for the edit function
-    console.log('Edit asset with ID:', id);
-    // Here you would implement navigation to the edit page or show the edit form
   }
 
   return (
@@ -66,7 +60,7 @@ const Fetch = () => {
               <td>{asset.creation_date}</td>
               <td>{asset.type}</td>
               <td>
-                <button className="btn btn-primary" onClick={() => editBtn(asset.id)}>Edit</button>
+                <button className="btn" style={{ marginRight: "10px" }} onClick={() => onEdit(asset)}>Edit</button>
                 <button className="btn btn-danger" style={{ marginLeft: "10px" }} onClick={() => deleteBtn(asset.id)}>Delete</button>
               </td>
             </tr>
@@ -77,4 +71,4 @@ const Fetch = () => {
   );
 };
 
-export default Fetch;
+export default AssetTable;
