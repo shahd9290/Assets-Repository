@@ -24,6 +24,7 @@ public class AssetController {
     public static final String REMOVAL_MSG = "Removal successful!";
     public static final String MISSING_DATA_MSG = "Missing data!";
     public static final String INVALID_TYPE_MSG = "Invalid Type!";
+    public static final String DEPENDENCY_MSG = "Asset has dependencies! Remove them First!";
 
 
     @Autowired
@@ -98,6 +99,8 @@ public class AssetController {
         if (returnedAsset.isEmpty())
             return ResponseEntity.badRequest().body(INVALID_ID_MSG);
 
+        if (hasChildren(assetID))
+            return ResponseEntity.badRequest().body(DEPENDENCY_MSG);
 
         String typeName = returnedAsset.get().getType();
 
@@ -211,5 +214,12 @@ public class AssetController {
         }
 
         return output;
+    }
+
+    private boolean hasChildren(Long parent_id) {
+        Map<String, Object> payload = new HashMap<>();
+
+        payload.put("parent_id", parent_id.intValue());
+        return !search(payload).isEmpty();
     }
 }
