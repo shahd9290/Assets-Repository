@@ -63,10 +63,19 @@ public class AuthController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+                .toList();
+        String role;
+        if (roles.contains(ERole.ROLE_ADMIN.toString())){
+            role = "admin";
+        } else if (roles.contains((ERole.ROLE_USER.toString()))) {
+            role = "user";
+        }else{
+            role = "viewer";
+        }
+        JwtResponse test = new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
+                userDetails.getEmail(), role);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
-                userDetails.getEmail(), roles));
+        return ResponseEntity.ok(test);
     }
 
     @PostMapping("/signup")
