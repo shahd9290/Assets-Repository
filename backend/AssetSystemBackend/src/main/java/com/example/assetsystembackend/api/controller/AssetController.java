@@ -52,8 +52,8 @@ public class AssetController {
 
         // Parent ID must belong to an asset in the table.
         String parentIDString = String.valueOf(assetData.getOrDefault("parent_id", null));
-        Long parent_id = !parentIDString.equals("null") ? Long.valueOf(parentIDString) : null;
-        if (parent_id != null && !assetService.exists(parent_id))
+        long parent_id = !parentIDString.equals("null") ? Long.parseLong(parentIDString) : 0;
+        if (parent_id != 0 && !assetService.exists(parent_id))
             return ResponseEntity.badRequest().body(INVALID_ID_MSG);
 
         // Get the current date
@@ -79,7 +79,7 @@ public class AssetController {
         String description = assetData.getOrDefault("description", null);
         String link = assetData.getOrDefault("link", null);
 
-        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id);
+        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id == 0 ? null : parent_id);
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
@@ -189,7 +189,7 @@ public class AssetController {
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
         String search_term = (String) payload.getOrDefault("search_term", null);
-        Long parent_id = ((Integer) payload.getOrDefault("parent_id", null)).longValue();
+        Long parent_id = ((Integer) payload.getOrDefault("parent_id", 0)).longValue();
 
 
         // something in the payload that isn't any of the above filters.
