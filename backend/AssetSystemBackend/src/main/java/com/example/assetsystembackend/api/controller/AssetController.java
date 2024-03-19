@@ -193,7 +193,7 @@ public class AssetController {
 
 
         // something in the payload that isn't any of the above filters.
-        if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == null)
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == 0)
             return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
