@@ -208,7 +208,7 @@ public class AssetController {
                 continue;
             if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
                 continue;
-            if (asset.get("parent_id") != parent_id)
+            if (parent_id != 0 && asset.get("parent_id") != parent_id)
                 continue;
             output.add(asset);
         }
