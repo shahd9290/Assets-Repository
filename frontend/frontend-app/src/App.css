@@ -4,11 +4,13 @@
 
 body {
     font-family: Arial, sans-serif;
+    background-image: url("https://images.unsplash.com/photo-1454117096348-e4abbeba002c?ixlib=rb-4.0.3");
 }
 .container {
     width: 50%;
     margin: 0 auto;
 }
+
 
 form, .button-container {
     margin-bottom: 20px;
@@ -20,8 +22,12 @@ label, select, input, textarea {
     display: block;
     align-items: center;
     width: 45%;
-    margin: 10px 225px;
+    margin: 10px 250px;
     padding: 8px;
+}
+
+.select {
+  background-color: DodgerBlue;
 }
 
 

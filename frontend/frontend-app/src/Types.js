@@ -7,7 +7,6 @@ function Types() {
       <head>
         <h1>Type Management System</h1>
       </head>
-      <body>
         <h1>Create New Type</h1>
         <form>
           <label for="type-title">Title:</label>
@@ -21,7 +20,6 @@ function Types() {
           <button id="createButton" onclick="handleButtonClick(id)" type="submit">Create Type</button>
         </form>
         <button id="deleteButton" onclick="handleButtonClick(id)">Delete Type</button>
-      </body>
     </div>
   );
 }

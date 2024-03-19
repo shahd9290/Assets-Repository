@@ -6,7 +6,6 @@ function UserLogin() {
       <head>
         <h1>User Login</h1>
       </head>
-      <body>
         <h1>Log into your account</h1>
         <form>
           <label for="userName">Enter your username:</label>
@@ -17,9 +16,8 @@ function UserLogin() {
           <p></p>
           <input type="password" id="passWord" name="pass" required/>
           <p></p>
-          <button type="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
+          <button type="submit">Register User</button>
         </form>
-      </body>
     </div>
   );
 }

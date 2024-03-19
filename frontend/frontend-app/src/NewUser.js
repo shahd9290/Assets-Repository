@@ -6,9 +6,7 @@ function NewUser() {
       <head>
         <title>User Registration</title>
       </head>
-      <body>
         <h1>Registering a New User</h1>
-        <form>
           <label for="firstName">Enter your first name:</label>
           <p></p>
           <input type="text" id="firstName" name="firstN" required/>
@@ -37,8 +35,6 @@ function NewUser() {
           </select>
           <p></p>
           <button type="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
-        </form>
-      </body>
     </div>
   );
 }
