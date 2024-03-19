@@ -123,6 +123,6 @@ public class AuthController {
         user.setRoles(roles);
         userRepo.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully."));
+        return ResponseEntity.ok("User Registered Successfully");
     }
 }
