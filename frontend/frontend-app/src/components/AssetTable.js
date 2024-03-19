@@ -131,9 +131,9 @@ const Fetch = ({ onEdit }) => {
                  //intialising and filling the table from the database
                  assets && assets.map((asset) =>(
                      <tr key={asset.id}>
-                         <td>{asset.title}</td>
+                         <td>{asset.name}</td>
                          <td>{asset.link}</td>
-                         <td>{asset.creator}</td>
+                         <td>{asset.creator_name}</td>
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
                          <td>{asset.description}</td>
