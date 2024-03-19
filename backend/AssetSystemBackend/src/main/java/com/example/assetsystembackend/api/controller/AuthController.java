@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,9 +66,10 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .toList();
         String role;
-        if (roles.contains(ERole.ROLE_ADMIN.toString())){
+        //if (roles.contains(ERole.ROLE_ADMIN.toString())){
+        if (Objects.equals(roles.get(0), ERole.ROLE_ADMIN.toString())) {
             role = "admin";
-        } else if (roles.contains((ERole.ROLE_USER.toString()))) {
+        } else if (Objects.equals(roles.get(0), ERole.ROLE_USER.toString())) {
             role = "user";
         }else{
             role = "viewer";
