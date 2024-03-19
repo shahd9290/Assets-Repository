@@ -19,7 +19,7 @@ public class TypeController {
         this.service = service;
     }
 
-    @GetMapping("/get-type-data/{name}")
+    @GetMapping("/get-type-data/test")
     public ResponseEntity<List<Object[]>> getAllTypes(@PathVariable String name){
         List<Object[]> tableData= service.retrieveData(name);
         if (tableData.isEmpty())
@@ -27,12 +27,20 @@ public class TypeController {
         return ResponseEntity.ok(tableData);
     }
 
-    @GetMapping("/get-columns/{tableName}")
+    @GetMapping("/get-columns/test")
     public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName){
         List<String> columns= service.getTableColumns(tableName);
         if (columns.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(columns);
+    }
+
+    @GetMapping("/get-types")
+    public ResponseEntity<Object> getType() {
+        List<String> tables = service.getTypeTableNames();
+        if (tables.isEmpty())
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(tables);
     }
 
 
@@ -71,7 +79,7 @@ public class TypeController {
     }
 
 
-    @PostMapping("/insert-data/{tableName}")
+    @PostMapping("/insert-data/test")
     public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
         if (!isValidInsertData(tableName, data))
             return ResponseEntity.badRequest().body("Invalid data provided!");
@@ -82,6 +90,17 @@ public class TypeController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Data inserted successfully");
     }
 
+    @PostMapping("/remove-data/{tableName}")
+    public ResponseEntity<Object> deleteData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
+        if (!isValidInsertData(tableName, data))
+            return ResponseEntity.badRequest().body("Invalid data provided!");
+
+        if (!service.deleteData(tableName, (Long) data.get("id")))
+            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
+
+    }
 
     /**
      * Method to verify the structure of the data received matches the expected one from the API.

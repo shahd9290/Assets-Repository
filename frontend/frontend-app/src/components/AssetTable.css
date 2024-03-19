@@ -1,0 +1,73 @@
+/* Style for the table */
+ .table-container{
+    width: 100vw;
+    display: flex;
+    align-items: auto;
+    margin-top: -10px;
+    z-index: 2;
+ }
+ table {
+    display:block;
+    align-items: center;
+    width: 100vw;
+    border-collapse: collapse;
+    margin: 50px ;
+    margin-top: 10px;
+    background-color: rgb(227, 232, 230);
+    
+  }
+  
+  /* Header row style */
+ table th {
+  align-items: center;
+    width: 100vw;
+    background-color: #fffdfd;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border-bottom: 1px solid #050505;
+  }
+  /* Alternate row background color for better readability */
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Default row style */
+  table td {
+    text-align: center;
+    padding: 2px;
+    border-bottom: 1px solid #050505;
+  }
+  /* Hover effect on rows */
+  table tr:hover {
+    background-color: #e1dddd;
+  }
+
+  h1 {
+    text-align: center;
+  }
+  .delete{
+    color: #faf9f9;
+    background-color: crimson;
+  }
+  .delete:hover{
+    background-color: crimson;
+  }
+  .gAT{
+    position: absolute;
+    top: 55px;
+    right: 16px;
+  }
+
+  table td td{
+    border-bottom: none;
+  }
+
+  table tr:last-child{
+    border-bottom: none;
+  }
+
+  .searchbar-wrapper{
+    margin-left: 300px;
+    z-index: 1;
+  }
