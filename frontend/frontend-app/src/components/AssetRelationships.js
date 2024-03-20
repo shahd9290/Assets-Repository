@@ -1,8 +1,7 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactFlow, {
   useNodesState,
-  useEdgesState,
-  addEdge,
+  useEdgesState
 } from 'reactflow';
 import { CgClose } from "react-icons/cg"; 
 import 'reactflow/dist/style.css';
@@ -16,7 +15,11 @@ const initialAssets = [
 ];
 
 
- 
+/**
+ * Graph that shows relationship between assets
+ * @param {*} props child,parent and relation variables from AssetTable.js
+ * @returns html code for a popup that renders a graph of the relationship between assets
+ */ 
 export default function App(props) {
 
   //initialising states that need to be kept by the component
@@ -64,7 +67,12 @@ export default function App(props) {
   );
   }, [childName,parent, relation, setEdges,setNodes]);
 
-
+  /**
+   * Initialises the state of the variables used to render the graph
+   * @param {*} childID ID of child asset
+   * @param {*} parent name of parent asset
+   * @param {*} edgeR relation between assets
+   */
   function makeGraph(childID,parent,edgeR){
     fetch('http://localhost:8080/search',
     {method:'POST',

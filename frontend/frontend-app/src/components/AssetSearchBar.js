@@ -2,6 +2,11 @@
 
 import './AssetSearchBar.css';
 
+/**
+ * 
+ * @param {*} props functions to be intialised from AssetTable.js
+ * @returns searchbar for assets
+ */
 function SearchBar(props){
     return(
         <div className='searchbar-main-container'>
