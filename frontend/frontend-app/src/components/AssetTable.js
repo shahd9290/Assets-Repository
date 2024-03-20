@@ -25,7 +25,7 @@ const Fetch = ({ onEdit }) => {
   const [child, setChild]  = useState(0);
   const [parent, setParent] = useState("name");
   const [relationship, setRelationship] = useState();
-  const [at_search, setAT_Search]= useState('')
+  const [at_search, setAT_Search]= useState(null)
 
   useEffect(() => {
     retrieveAssets();
@@ -109,6 +109,12 @@ const Fetch = ({ onEdit }) => {
     setRelationship(r);
   }
 
+  const filteredGAT= gAT.filter((gatR)=>{
+    if(at_search== null)
+        return gatR;
+    else if(gatR.entry.includes(at_search))
+        return gatR;
+  })
   return (
     <div className='main_container'>
          <h1> Assets </h1>
@@ -119,7 +125,7 @@ const Fetch = ({ onEdit }) => {
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
             <ATSB sn={setAT_Search}/>
          <ul>
-            {gAT.map((gLog)=>(
+            {filteredGAT.map((gLog)=>(
                 <li key={gLog.id}>{gLog.entry}</li>
             ))}
         </ul>
