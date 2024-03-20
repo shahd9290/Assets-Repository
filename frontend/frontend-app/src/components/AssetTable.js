@@ -22,7 +22,9 @@ const Fetch = ({ onEdit }) => {
   const[sType,setSType] = useState(null);
   const[sUser,setSUser] = useState(null);
   const [btn_RA,setBtn_RA] = useState(false);
-  const [asset1, setAsset1]  = useState('Node 1');
+  const [child, setChild]  = useState(0);
+  const [parent, setParent] = useState("name");
+  const [relationship, setRelationship] = useState();
   const [at_search, setAT_Search]= useState('')
 
   useEffect(() => {
@@ -101,6 +103,12 @@ const Fetch = ({ onEdit }) => {
     setBtn_RA(true)
   }
 
+  function setGraphV(c,p,r){
+    setChild(c);
+    setParent(p);
+    setRelationship(r);
+  }
+
   return (
     <div className='main_container'>
          <h1> Assets </h1>
@@ -134,9 +142,9 @@ const Fetch = ({ onEdit }) => {
                  //intialising and filling the table from the database
                  assets && assets.map((asset) =>(
                      <tr key={asset.id}>
-                         <td>{asset.title}</td>
+                         <td>{asset.name}</td>
                          <td>{asset.link}</td>
-                         <td>{asset.creator}</td>
+                         <td>{asset.creator_name}</td>
                          <td>{asset.creation_date}</td>
                          <td>{asset.type}</td>
                          <td>{asset.description}</td>
@@ -158,8 +166,8 @@ const Fetch = ({ onEdit }) => {
                                     </ul>
                                 </AuditTrail>
                              </td>
-                             <td onMouseEnter={()=>setAsset1(asset.title)}>
-                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childName={asset1} parentName='test_1.mp3'/>
+                             <td onMouseEnter={()=>setGraphV(asset.id,asset.name,asset.relation_type)}>
+                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childID={child} parentName={parent} relation={relationship}/>
                                 <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
                              </td>
                              

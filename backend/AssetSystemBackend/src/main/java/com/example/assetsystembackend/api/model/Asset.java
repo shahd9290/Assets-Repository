@@ -6,6 +6,8 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "assets")
+@SecondaryTable(name="assets_relations", pkJoinColumns = @PrimaryKeyJoinColumn(name = "asset_id"))
+
 public class Asset {
 
     @Id
@@ -31,9 +33,13 @@ public class Asset {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "parent_id")
+    @Column(name="parent_id", table="assets_relations")
     private Long parent_id;
-    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link, Long parent_id) {
+
+    @Column(name="relation_type", table="assets_relations")
+    private String relationType;
+
+    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link, Long parent_id, String relationType) {
         this.name = name;
         this.creatorName = creatorName;
         this.creationDate = creationDate;
@@ -41,6 +47,7 @@ public class Asset {
         this.type = type;
         this.link = link;
         this.parent_id = parent_id;
+        this.relationType = relationType;
     }
 
     public Asset() { //Constructor required
@@ -97,6 +104,10 @@ public class Asset {
     public Long getParent_id() {return parent_id;}
 
     public void setParent_id(Long parent_id) {this.parent_id = parent_id;}
+
+    public String getRelationType() {return relationType;}
+
+    public void setRelationType(String relationType) {this.relationType = relationType;}
 
 
     @Override
