@@ -7,6 +7,7 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { TbCirclesRelation } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
+import ATSB from './ATSearchBar';
 
 
 const Fetch = ({ onEdit }) => {
@@ -22,6 +23,7 @@ const Fetch = ({ onEdit }) => {
   const[sUser,setSUser] = useState(null);
   const [btn_RA,setBtn_RA] = useState(false);
   const [asset1, setAsset1]  = useState('Node 1');
+  const [at_search, setAT_Search]= useState('')
 
   useEffect(() => {
     retrieveAssets();
@@ -107,6 +109,7 @@ const Fetch = ({ onEdit }) => {
         </div>
          <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
          <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
+            <ATSB sn={setAT_Search}/>
          <ul>
             {gAT.map((gLog)=>(
                 <li key={gLog.id}>{gLog.entry}</li>
