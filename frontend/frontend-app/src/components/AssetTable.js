@@ -21,7 +21,9 @@ const Fetch = ({ onEdit }) => {
   const[sType,setSType] = useState(null);
   const[sUser,setSUser] = useState(null);
   const [btn_RA,setBtn_RA] = useState(false);
-  const [asset1, setAsset1]  = useState('Node 1');
+  const [child, setChild]  = useState(0);
+  const [parent, setParent] = useState("name");
+  const [relationship, setRelationship] = useState();
 
   useEffect(() => {
     retrieveAssets();
@@ -99,6 +101,12 @@ const Fetch = ({ onEdit }) => {
     setBtn_RA(true)
   }
 
+  function setGraphV(c,p,r){
+    setChild(c);
+    setParent(p);
+    setRelationship(r);
+  }
+
   return (
     <div className='main_container'>
          <h1> Assets </h1>
@@ -155,8 +163,8 @@ const Fetch = ({ onEdit }) => {
                                     </ul>
                                 </AuditTrail>
                              </td>
-                             <td onMouseEnter={()=>setAsset1(asset.title)}>
-                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childName={asset1} parentName='test_1.mp3'/>
+                             <td onMouseEnter={()=>setGraphV(asset.id,asset.name,asset.relation_type)}>
+                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childID={child} parentName={parent} relation={relationship}/>
                                 <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
                              </td>
                              
