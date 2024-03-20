@@ -13,7 +13,6 @@ import java.util.List;
 @Service
 public class BackLogService {
 
-    //Dummy User
 
     private final BackLogRepository backLogRepository;
 
