@@ -1,0 +1,42 @@
+
+.search_results{
+    display: flex;
+    align-items: center;
+}
+
+.searchbar-main-container {
+    border-radius: 5px;
+    margin: 1rem;
+    width:525px;
+    text-align: center;
+    height: 45px;
+    box-shadow: 0px 0px 8px #ddd;
+  }
+  
+ 
+
+  input{
+    width: 15vw;
+    margin-left: 1px;
+    align-items: flex-start;
+    border: 1px black;
+
+  }
+
+  .searchbar-main-container:hover{
+    height: 160px;
+  }
+  input:focus{
+    outline: none;
+  }
+  .sub-container{
+    margin-top: 2px;
+  }
+
+  p{
+    margin-left: 10px;
+  }
+  input,p{
+    display: inline-block;
+
+  }
