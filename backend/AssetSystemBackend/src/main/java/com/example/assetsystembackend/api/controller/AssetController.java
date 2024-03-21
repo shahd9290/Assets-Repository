@@ -29,11 +29,7 @@ public class AssetController {
 
 
     @Autowired
-<<<<<<< HEAD
-    public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService){
-=======
     public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService) {
->>>>>>> main
         this.assetService = assetService;
         this.dynamicService = dynamicService;
         this.backLogService = backLogService;
@@ -114,11 +110,7 @@ public class AssetController {
             boolean assetDeletion = assetService.deleteAsset(assetID);
             boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
 
-<<<<<<< HEAD
-            if (!assetDeletion && !typeDeletion){
-=======
             if (!assetDeletion && !typeDeletion) {
->>>>>>> main
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
 
@@ -177,11 +169,7 @@ public class AssetController {
 
         return output;
     }
-<<<<<<< HEAD
-    @GetMapping("/search")
-=======
     @PostMapping("/search")
->>>>>>> main
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();
         List<Map<String, Object>> output = new ArrayList<>();
@@ -202,17 +190,11 @@ public class AssetController {
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
         String search_term = (String) payload.getOrDefault("search_term", null);
-<<<<<<< HEAD
-
-        // something in the payload that isn't any of the above filters.
-        if (type == null && date_before == null && date_after == null && user == null && search_term == null)
-=======
         Long parent_id = ((Integer) payload.getOrDefault("parent_id", null)).longValue();
 
 
         // something in the payload that isn't any of the above filters.
         if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == null)
->>>>>>> main
             return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
@@ -227,11 +209,8 @@ public class AssetController {
                 continue;
             if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
                 continue;
-<<<<<<< HEAD
-=======
             if (asset.get("parent_id") != parent_id)
                 continue;
->>>>>>> main
             output.add(asset);
         }
 
