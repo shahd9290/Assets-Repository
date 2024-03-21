@@ -1,13 +1,8 @@
 
-.search_results{
-    display: flex;
-    align-items: center;
-}
-
 .searchbar-main-container {
     border-radius: 5px;
     margin: 1rem;
-    width:525px;
+    width:43vw;
     text-align: center;
     height: 45px;
     box-shadow: 0px 0px 8px #ddd;
@@ -24,7 +19,7 @@
   }
 
   .searchbar-main-container:hover{
-    height: 160px;
+    height: 200px;
   }
   input:focus{
     outline: none;
@@ -38,5 +33,4 @@
   }
   input,p{
     display: inline-block;
-
   }

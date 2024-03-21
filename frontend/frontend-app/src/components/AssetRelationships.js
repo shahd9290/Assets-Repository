@@ -84,7 +84,6 @@ export default function App(props) {
             if (data===null) {
               return console.log("no assets returned");            
             }
-            console.log(data);
             setChild(data);
         });
     setParent(parent);
