@@ -78,7 +78,7 @@ const Fetch = ({ onEdit }) => {
     if(sTerm===""){setSTerm(null)}
     if(sType===""){setSType(null)}
     if(sUser===""){setSUser(null)}
-    //retriving all assets from the backend 
+    //retriving all assets from the backend
     fetch('http://localhost:8080/search',
     {method:'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -103,7 +103,7 @@ const Fetch = ({ onEdit }) => {
     if(window.confirm("Are you sure you want to delete this asset?")){
         //using the delete endpoint to delete assets from both backend and frontend
         fetch('http://localhost:8080/delete-asset',
-        {method :'DELETE', 
+        {method :'DELETE',
         headers : {"Content-Type": "application/json"},
         body:JSON.stringify({"id":id})})
         .then( (item)=>{
@@ -126,9 +126,9 @@ const Fetch = ({ onEdit }) => {
 
   /**
    * Initialises the props to be sent to the AssetRelationships.js
-   * @param {*} c child of the asset 
+   * @param {*} c child of the asset
    * @param {*} p the asset itself
-   * @param {*} r relationship between the assets 
+   * @param {*} r relationship between the assets
    */
   function setGraphV(c,p,r){
     setChild(c);
@@ -145,7 +145,7 @@ const Fetch = ({ onEdit }) => {
         return gatR;
   })
   return (
-    <div className='main_container'>
+    <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
          <h1> Assets </h1>
          <div className='searchbar-wrapper'>
             <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
@@ -185,7 +185,7 @@ const Fetch = ({ onEdit }) => {
                          <td>{asset.description}</td>
                          <td>
                             <td className='d-row'>
-                                <button className = "delete" 
+                                <button className = "delete"
                                 style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
                             </td>
                             <td className='e-row'>
@@ -205,7 +205,7 @@ const Fetch = ({ onEdit }) => {
                                 <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childID={child} parentName={parent} relation={relationship}/>
                                 <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
                              </td>
-                             
+
                          </td>
                      </tr>
                  ))}

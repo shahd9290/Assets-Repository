@@ -9,7 +9,7 @@ function Home() {
 
 
   return (
-    <div>
+    <div >
         <Navbar />
         <Routes>
             <Route path='/register-user' element={<NewUser/>} />

@@ -35,7 +35,9 @@ function NewUser() {
             <option>Admin</option>
           </select>
           <p></p>
-          <button type="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
+          <p></p>
+          <p></p>
+          <button id="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
         </form>
     </div>
   );
