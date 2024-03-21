@@ -20,4 +20,9 @@ Edit button is successfully in the table , and seperate page is created . Howeve
 
 14/03/2024 -
 Button created and directs to another page with the form , however having issues pre filling the form as i am editing both the front end and backend.
-Commited but not pushed to local repo as this is only for working code 
+Commited but not pushed to local repo as this is only for working code
+
+21/03/2024 - 
+Errors in backend being fixed by other team memebers , not possible to carry on developement of my branch until errors are fixed. 
+Instead will research privately how to edit the asset again using the template buttons implemented
+
