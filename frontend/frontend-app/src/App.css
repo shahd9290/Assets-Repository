@@ -11,18 +11,36 @@ body {
     margin: 0 auto;
 }
 
+.container input {
+  width: 70%;
+  clear: both;
+}
+
 
 form, .button-container {
     margin-bottom: 20px;
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 10px;
     border-radius: 5px;
+    text-align: center;
+    input-align: center;
 }
+
+input[type="text"] {
+             display: block;
+             margin : 0 auto;
+        }
+
+input[type="password"] {
+            display: block;
+            margin : 0 auto;
+        }
+
 label, select, input, textarea {
-    display: block;
+    display: inline-block;
     align-items: center;
     width: 45%;
-    margin: 10px 250px;
+    margin: 10px 260px;
     padding: 8px;
 }
 

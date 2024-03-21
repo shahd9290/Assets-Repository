@@ -5,7 +5,7 @@ function Types() {
   return (
     <div className="App" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
-        <h1>Type Management System</h1>
+        <title>Type Management System</title>
       </head>
         <h1>Create New Type</h1>
         <form>

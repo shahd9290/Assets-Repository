@@ -31,16 +31,23 @@ public class Asset {
     @Column(name = "type")
     private String type;
 
-    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link) {
+    @Column(name = "parent_id")
+    private Long parent_id;
+    public Asset( String name, String creatorName, Date creationDate, String description, String type, String link, Long parent_id) {
         this.name = name;
         this.creatorName = creatorName;
         this.creationDate = creationDate;
         this.description = description;
         this.type = type;
         this.link = link;
+        this.parent_id = parent_id;
     }
 
     public Asset() { //Constructor required
+    }
+
+    public Asset(long id) { //Constructor required
+        this.id = id;
     }
 
     public Long getId() {
@@ -87,11 +94,15 @@ public class Asset {
 
     public void setLink(String link) {this.link = link;}
 
+    public Long getParent_id() {return parent_id;}
+
+    public void setParent_id(Long parent_id) {this.parent_id = parent_id;}
+
 
     @Override
     public String toString(){
-        String output= "{id(%d) | name(%s) | type(%s) | link(%s) | creation date(%s) | description(%s)}";
-        return String.format(output, id, name, type, link, creationDate.toString(), description);
+        String output= "{id(%d) | name(%s) | type(%s) | link(%s) | creation date(%s) | description(%s) | parent_id(%d)}";
+        return String.format(output, id, name, type, link, creationDate.toString(), description, parent_id);
     }
 
 }

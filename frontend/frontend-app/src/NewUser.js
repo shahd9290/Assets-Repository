@@ -2,11 +2,12 @@ import './App.css';
 
 function NewUser() {
   return (
-    <div className="NewUser" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
+    <div className="NewUser"  style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
         <title>User Registration</title>
       </head>
         <h1>Registering a New User</h1>
+        <form>
           <label for="firstName">Enter your first name:</label>
           <p></p>
           <input type="text" id="firstName" name="firstN" required/>
@@ -35,6 +36,7 @@ function NewUser() {
           </select>
           <p></p>
           <button type="submit" onclick="handleButtonClick(id)" name="button">Register User</button>
+        </form>
     </div>
   );
 }

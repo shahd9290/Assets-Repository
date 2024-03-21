@@ -1,12 +1,16 @@
-import React from "react";
+import React from 'react';
+import './AuditTrail.css';
+import { CgClose } from "react-icons/cg";
 
-function Popup(){
-    return(
-        <div>
-            <Popup trigger= {<button>Show audit trail</button>} position="right center">
-                <p>This is was last edited by Owen Mashingaidze</p>
-            </Popup>
+function AuditTrail(props){
+    return (props.trigger) ?(
+        <div className='audittrail'>
+            <div className='audittrail-inner'>
+                <button className='close-btn' onClick={()=>props.setTrigger(false)}><CgClose /></button>
+                {props.children}
+            </div>
         </div>
-    )
+    ): "";
 }
-export default Popup;
+
+export default AuditTrail;

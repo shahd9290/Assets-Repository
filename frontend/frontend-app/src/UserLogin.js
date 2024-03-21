@@ -4,7 +4,7 @@ function UserLogin() {
   return (
     <div className="UserLogin" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
-        <h1>User Login</h1>
+        <title>User Login</title>
       </head>
         <h1>Log into your account</h1>
         <form>
