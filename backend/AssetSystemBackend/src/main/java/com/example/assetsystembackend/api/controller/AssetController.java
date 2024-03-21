@@ -26,6 +26,7 @@ public class AssetController {
     public static final String MISSING_DATA_MSG = "Missing data!";
     public static final String INVALID_TYPE_MSG = "Invalid Type!";
     public static final String DEPENDENCY_MSG = "Asset has dependencies! Remove them First!";
+    public static final String RELATION_MSG = "Please specify the relation between the parent and child assets!";
 
 
     @Autowired
@@ -53,9 +54,15 @@ public class AssetController {
 
         // Parent ID must belong to an asset in the table.
         String parentIDString = String.valueOf(assetData.getOrDefault("parent_id", null));
-        Long parent_id = !parentIDString.equals("null") ? Long.valueOf(parentIDString) : null;
-        if (parent_id != null && !assetService.exists(parent_id))
+        long parent_id = !parentIDString.equals("null") ? Long.parseLong(parentIDString) : 0;
+
+        String relationType = assetData.getOrDefault("relation_type", null);
+
+        if (parent_id != 0 && !assetService.exists(parent_id))
             return ResponseEntity.badRequest().body(INVALID_ID_MSG);
+        // Either parent_id without type or type without parent_id. Needs both to work.
+        else if ((parent_id != 0 && relationType == null )|| (relationType != null && parent_id == 0))
+            return ResponseEntity.badRequest().body(RELATION_MSG);
 
         // Get the current date
         LocalDate currentDate = LocalDate.now();
@@ -80,7 +87,7 @@ public class AssetController {
         String description = assetData.getOrDefault("description", null);
         String link = assetData.getOrDefault("link", null);
 
-        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id);
+        Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id == 0 ? null : parent_id, relationType);
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
@@ -106,9 +113,9 @@ public class AssetController {
         String typeName = returnedAsset.get().getType();
 
         try {
-            //backLogService.deleteLog(assetID);
             boolean assetDeletion = assetService.deleteAsset(assetID);
             boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
+            backLogService.addAssetDeletion(returnedAsset.get());
 
             if (!assetDeletion && !typeDeletion) {
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
@@ -145,6 +152,7 @@ public class AssetController {
             assetData.put("type", type);
             assetData.put("link", asset.getLink());
             assetData.put("parent_id", asset.getParent_id());
+            assetData.put("relation_type", asset.getRelationType());
 
             // Prevents requesting for certain types repeatedly
             if (!typeColumns.containsKey(type) || !typeDataMap.containsKey(type)) {
@@ -190,11 +198,11 @@ public class AssetController {
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
         String user = (String) payload.getOrDefault("user", null);
         String search_term = (String) payload.getOrDefault("search_term", null);
-        Long parent_id = ((Integer) payload.getOrDefault("parent_id", null)).longValue();
+        Long parent_id = ((Integer) payload.getOrDefault("parent_id", 0)).longValue();
 
 
         // something in the payload that isn't any of the above filters.
-        if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == null)
+        if (type == null && date_before == null && date_after == null && user == null && search_term == null && parent_id == 0)
             return assetList;
 
         // Check condition. If condition is false restart loop and don't add to output.
@@ -209,7 +217,7 @@ public class AssetController {
                 continue;
             if (date_after != null && !date_after.before((Date) asset.get("creation_date")))
                 continue;
-            if (asset.get("parent_id") != parent_id)
+            if (parent_id != 0 && asset.get("parent_id") != parent_id)
                 continue;
             output.add(asset);
         }

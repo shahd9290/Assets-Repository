@@ -1,0 +1,35 @@
+
+.at-searchbar-main-container {
+    border-radius: 5px;
+    margin: 1rem;
+    width:525px;
+    text-align: center;
+    height: 45px;
+    box-shadow: 0px 0px 8px #ddd;
+  }
+  
+ 
+
+  .at-search-by-name{
+    
+    background-color: beige;
+    width: 15vw;
+    margin-left: 1px;
+    align-items: flex-start;
+    border: 1px black;
+
+  }
+  input:focus{
+    outline: none;
+  }
+  .sub-container{
+    margin-top: 2px;
+  }
+
+  p{
+    margin-left: 10px;
+  }
+  input,p{
+    display: inline-block;
+
+  }
