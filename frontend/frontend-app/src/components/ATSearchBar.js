@@ -10,8 +10,8 @@ function ATSB(props){
     return(
         <div className='at-searchbar-main-container'>
         <div className='at-sub-container'>
-            <p>Asset Name: </p>
-            <input className='at-search-by-name' placeholder="input asset name to search" 
+            <p>Search: </p>
+            <input className='at-search-by-name' placeholder="input asset name or action to search" 
              onChange={event=>{props.sn(event.target.value)}}/> 
         </div>
         {props.children}
