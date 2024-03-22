@@ -6,11 +6,13 @@ import com.example.assetsystembackend.api.service.BackLogService;
 import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.*;
+
 
 @RestController
 public class AssetController {
@@ -40,6 +42,7 @@ public class AssetController {
         "asset": { asset fields}
         "type" : {type fields}
      */
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/add-new-asset")
     public ResponseEntity<String> addAsset(@RequestBody Map<String, Object> payload) {
         //check data is compatible
@@ -88,6 +91,7 @@ public class AssetController {
         return ResponseEntity.ok(SUCCESS_MSG);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody Map<String, Object> payload) {
         if (!payload.containsKey("id"))
@@ -168,6 +172,8 @@ public class AssetController {
 
         return output;
     }
+
+    @PreAuthorize("hasAnyRole('ROL_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();
