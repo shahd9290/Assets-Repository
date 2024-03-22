@@ -4,6 +4,7 @@ import Types from "./Types";
 import App from "./App";
 import NewUser from "./NewUser";
 import AssetTable from "./components/AssetTable";
+import EditAsset from "./EditAsset";
 function Home() {
 
 
@@ -16,6 +17,7 @@ function Home() {
             <Route path='/' element={<AssetTable/>} />
             <Route path='/assets' element={<AssetTable/>} />
             <Route path='/register-user' element={<NewUser/>} />
+            <Route path='/edit-asset/:assetId' element={<EditAsset />} />
         </Routes>
 
     </div>
