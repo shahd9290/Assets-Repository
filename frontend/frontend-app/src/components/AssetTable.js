@@ -87,12 +87,15 @@ const Fetch = ({ onEdit }) => {
                          "user":sUser})})
     .then((res) => {
         return res.json();
-        })
-        .then((data) => {
-            if (data==null) {return"" }
-            console.log(data);
-            setAssets(data);
-        });
+    })
+    .then((data) => {
+        if (data==null) {return"" }
+        console.log(data);
+        setAssets(data);
+    })
+    .catch((error)=>{
+        alert('error loading page '+ error)
+    });
   }
 
   /**
@@ -113,8 +116,12 @@ const Fetch = ({ onEdit }) => {
                 alert(response);
                 retrieveAssets()
             })
-        }
-    )}
+        })
+        .catch((error)=>{
+            alert('error loading page '+ error)
+        });
+        
+    }
   }
 
   /**
