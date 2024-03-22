@@ -11,6 +11,7 @@ const Navbar = () => {
        <li><a href='/user-login'>User Login</a></li>
        <li><a href='/create-assets'>Create Assets </a></li>
        <li><a href='/create-types'>Create Types</a></li>
+       <li><a>Logout</a></li>
      </ul>
     </div>
   );

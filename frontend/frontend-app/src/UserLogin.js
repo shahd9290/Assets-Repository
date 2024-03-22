@@ -7,37 +7,38 @@ function UserLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  async function onSubmit(){
-    const payload = {
-      "username": username,
-      "password": password
-    }
+  const onSubmit = async (user)=>{
+   user.preventDefault();
     try{
+      const payload = {
+        "username": username,
+        "password": password
+      }
       const loggedIn = await axios.post('http://localhost:8080/api/auth/signin',payload);
-      console.log("log in successful");
+
+      
+      const token = {"token":JSON.stringify(loggedIn.data.token)};
+      console.log(token);
       alert("Login successful!");
+
     }catch (error){
-      const errorMessage = error.response ? error.response.data : error.message;
-      console.error(errorMessage);
-      alert(errorMessage)
-    }
+      console.error('N/a');
+      alert('no bueno')
+    };
   }
   return (
     <div className="UserLogin" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
-      <head>
-        <title>User Login</title>
-      </head>
         <h1>Log into your account</h1>
-        <form>
-          <label for="userName">Enter your username:</label>
+        <form onSubmit={onSubmit}>
+          <label htmlFor="userName">Enter your username:</label>
           <p></p>
-          <input type="text" id="userName" name="user" value={username} onChange={event => setUsername(event.target.value)}required/>
+          <input type="text" id="userName"  value={username} onChange={event => setUsername(event.target.value)}required/>
           <p></p>
-          <label for="passWord">Enter your password:</label>
+          <label htmlFor="passWord">Enter your password:</label>
           <p></p>
-          <input type="password" id="passWord" name="pass" value={password} onChange={event=> setPassword(event.target.value)}required/>
+          <input type="password" id="passWord" value={password} onChange={event=> setPassword(event.target.value)}required/>
           <p></p>
-          <button type="submit" onSubmit={onSubmit}>Login</button>
+          <button>Login</button>
         </form>
     </div>
   );
