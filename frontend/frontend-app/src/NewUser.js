@@ -2,8 +2,14 @@ import './App.css';
 import axios from 'axios';
 import React, { useState } from 'react';
 
+/**
+ * renders a form for users to be created on.
+ * 
+ * @returns form for creating users in the system
+ */
 function NewUser() {
 
+  //states to be kept throughout the process
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -18,6 +24,8 @@ function NewUser() {
          "email":email,
          "role":[role]
        }
+
+       //send user data to the backend
        const registerUser = await axios.post('http://localhost:8080/api/auth/signup',payload);
  
        

@@ -2,8 +2,14 @@ import './App.css';
 import axios from 'axios';
 import React, { useState } from 'react';
 
+/**
+ * Renders form for users to enter their credentials and login
+ *  
+ * @returns form for users to login
+ */
 function UserLogin() {
 
+  //states to be kept throughout the program 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,6 +20,8 @@ function UserLogin() {
         "username": username,
         "password": password
       }
+
+      //sending login information to backend
       const loggedIn = await axios.post('http://localhost:8080/api/auth/signin',payload);
 
       
