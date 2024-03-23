@@ -2,8 +2,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import bearerToken from './components/tokens/token.json'
 
 function App() {
+  const tokens = JSON.stringify(bearerToken['bearer-tokens']);
+  const token = tokens.slice(20,tokens.length-3);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -24,7 +27,12 @@ function App() {
 
     try {
       const payload = {
-        asset: {
+        'headers':{
+          method:'POST',
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+ token
+        }},
+       'body' : {asset: {
           name: 'asdasdsetrrhhnn',
           creator: 'sdsf',
           type: 'test',
@@ -33,7 +41,7 @@ function App() {
           title: formData.title,
           description: formData.description,
           type: formData.type,
-        }
+        }}
       };
 
       // POST request to the backend endpoint

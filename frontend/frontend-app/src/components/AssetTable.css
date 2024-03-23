@@ -74,6 +74,27 @@ table tr:nth-child(even) {
   }
 
   .searchbar-wrapper{
-    margin-left: 35%;
+    margin-left: 27%;
     z-index: 1;
   }
+
+.audittrail-table{
+  display: block;
+  align-items: center;
+  width: 30vw;
+  border-collapse: collapse;
+  margin: 100px ;
+  margin-top: 10px;
+  background-color: beige;
+}
+.audittrail-table tr{
+  width: 30vw;
+  border: none;
+  padding: 10px;
+}
+.audittrail-table tr:nth-child(even) {
+  background-color: beige;
+}
+.audittrail-table tr:last-child{
+  border-bottom: none;
+}

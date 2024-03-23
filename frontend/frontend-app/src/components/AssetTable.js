@@ -10,6 +10,9 @@ import { FiEdit } from "react-icons/fi";
 import ATSB from './ATSearchBar';
 import bearerToken from './tokens/token.json'
 
+
+
+
 /**
  *  This is a function that fetches and creates a table from the backend along with initialising actions
  * to be done on the rows of the table
@@ -37,7 +40,7 @@ const Fetch = ({ onEdit }) => {
 
   useEffect(() => {
     retrieveAssets();
-  }, );
+  }, []);
 
   /**
    * Retrieves the log of an asset
@@ -47,12 +50,10 @@ const Fetch = ({ onEdit }) => {
     setBtn_AT(true)
      //retrieving the audit trail for a specific asset from the backend
     fetch(`http://localhost:8080/audit/log${id}`,
-        {method:'POST',
+        {method:'GET',
         headers: { 'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+ token
-        }
-        }
-    )
+        }})
     .then((trail)=>{
         return trail.json();
     })
@@ -73,9 +74,7 @@ const Fetch = ({ onEdit }) => {
     {method:'GET',
     headers: { 'Content-Type': 'application/json',
                 'Authorization': 'Bearer '+ token
-    }
-    }
-    )
+    }})
     .then((res) => {
         return res.json();
         })
@@ -111,7 +110,8 @@ const Fetch = ({ onEdit }) => {
         setAssets(data);
     })
     .catch((error)=>{
-        alert('error loading page '+ error)
+        alert('Login to view assets ')
+        
     });
     console.log(token)
   }
@@ -171,20 +171,19 @@ const Fetch = ({ onEdit }) => {
         return gatR;
   })
   return (
-    <div>
         <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
             <h1> Assets </h1>
             <div className='searchbar-wrapper'>
                 <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
             </div>
             <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
-            <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
+            <AuditTrail className='gATPopup' trigger={btn_gAT} setTrigger={setBtn_gAT}>
                 <ATSB sn={setAT_Search}/>
-            <ul>
+            <table className='audittrail-table'>
                 {filteredGAT.map((gLog)=>(
-                    <li key={gLog.id}>{gLog.entry}</li>
+                    <tr key={gLog.id}> {gLog.entry} </tr>
                 ))}
-            </ul>
+            </table>
             </AuditTrail>
             <div className='table-container' >
             <table>
@@ -240,7 +239,6 @@ const Fetch = ({ onEdit }) => {
             </table>
             </div>
         </div>  
-    </div>
   );
 };
 
