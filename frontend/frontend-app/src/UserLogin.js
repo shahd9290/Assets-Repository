@@ -12,7 +12,6 @@ function UserLogin() {
   //states to be kept throughout the program 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const onSubmit = async (user)=>{
    user.preventDefault();
     try{
@@ -23,15 +22,17 @@ function UserLogin() {
 
       //sending login information to backend
       const loggedIn = await axios.post('http://localhost:8080/api/auth/signin',payload);
-
+      const userToken = {
+        "id":1,
+        "token":loggedIn.data.token};
       
-      const token = {"token":JSON.stringify(loggedIn.data.token)};
-      console.log(token);
+      const storeToken = await axios.patch('http://localhost:3500/bearer-tokens/1', userToken)
+      console.log('Login successful!');
       alert("Login successful!");
 
     }catch (error){
-      console.error('N/a');
-      alert('no bueno')
+      console.error('Login unsucssesful');
+      alert('Wrong username or password')
     };
   }
   return (

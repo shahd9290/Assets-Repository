@@ -8,6 +8,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import { TbCirclesRelation } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
 import ATSB from './ATSearchBar';
+import bearerToken from './tokens/token.json'
 
 /**
  *  This is a function that fetches and creates a table from the backend along with initialising actions
@@ -30,7 +31,9 @@ const Fetch = ({ onEdit }) => {
   const [child, setChild]  = useState(0);
   const [parent, setParent] = useState("name");
   const [relationship, setRelationship] = useState();
-  const [at_search, setAT_Search]= useState(null)
+  const [at_search, setAT_Search]= useState(null);
+  const tokens = JSON.stringify(bearerToken['bearer-tokens']);
+ const token = tokens.slice(20,tokens.length-3);
 
   useEffect(() => {
     retrieveAssets();
@@ -43,7 +46,13 @@ const Fetch = ({ onEdit }) => {
   function getAssetTrail(id){
     setBtn_AT(true)
      //retrieving the audit trail for a specific asset from the backend
-    fetch(`http://localhost:8080/audit/log${id}`)
+    fetch(`http://localhost:8080/audit/log${id}`,
+        {method:'POST',
+        headers: { 'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+ token
+        }
+        }
+    )
     .then((trail)=>{
         return trail.json();
     })
@@ -60,13 +69,19 @@ const Fetch = ({ onEdit }) => {
   function getGTA(){
     setBtn_gAT(true)
     //retrieving the audit trail for all assets
-    fetch('http://localhost:8080/audit/logs')
+    fetch('http://localhost:8080/audit/logs',
+    {method:'GET',
+    headers: { 'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+ token
+    }
+    }
+    )
     .then((res) => {
         return res.json();
         })
         .then((gRecord) => {
             if (gRecord==null) {return }
-            console.log(gRecord);
+            console.log(gRecord + tokens.token);
             setGAT(gRecord);
         });
   }
@@ -81,7 +96,9 @@ const Fetch = ({ onEdit }) => {
     //retriving all assets from the backend
     fetch('http://localhost:8080/search',
     {method:'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+ token
+    },
     body:JSON.stringify({"search_term":sTerm,
                          "type":sType,
                          "user":sUser})})
@@ -96,6 +113,7 @@ const Fetch = ({ onEdit }) => {
     .catch((error)=>{
         alert('error loading page '+ error)
     });
+    console.log(token)
   }
 
   /**
@@ -107,7 +125,8 @@ const Fetch = ({ onEdit }) => {
         //using the delete endpoint to delete assets from both backend and frontend
         fetch('http://localhost:8080/delete-asset',
         {method :'DELETE',
-        headers : {"Content-Type": "application/json"},
+        headers : {"Content-Type": "application/json",
+                    'Authorization': 'Bearer '+ token},
         body:JSON.stringify({"id":id})})
         .then( (item)=>{
             item.text()
@@ -152,74 +171,75 @@ const Fetch = ({ onEdit }) => {
         return gatR;
   })
   return (
-    <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
-         <h1> Assets </h1>
-         <div className='searchbar-wrapper'>
-            <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
-        </div>
-         <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
-         <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
-            <ATSB sn={setAT_Search}/>
-         <ul>
-            {filteredGAT.map((gLog)=>(
-                <li key={gLog.id}>{gLog.entry}</li>
-            ))}
-        </ul>
-         </AuditTrail>
-         <div className='table-container' >
-         <table>
-             <thead>
-                 <tr>
-                     <th>Title</th>
-                     <th>Link</th>
-                     <th>Creator</th>
-                     <th>Date</th>
-                     <th>Type</th>
-                     <th>Description</th>
-                     <th>Actions</th>
-                 </tr>
-             </thead>
-             <tbody>
-                 {
-                 //intialising and filling the table from the database
-                 assets && assets.map((asset) =>(
-                     <tr key={asset.id}>
-                         <td>{asset.name}</td>
-                         <td>{asset.link}</td>
-                         <td>{asset.creator_name}</td>
-                         <td>{asset.creation_date}</td>
-                         <td>{asset.type}</td>
-                         <td>{asset.description}</td>
-                         <td>
-                            <td className='d-row'>
-                                <button className = "delete"
-                                style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
-                            </td>
-                            <td className='e-row'>
-                              <button className="btn" ><FiEdit /></button>
-                            </td>
-                             <td className='at-row'>
-                                <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
-                                <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
-                                    <ul>
-                                        {aT.map((log)=>(
-                                            <li key={log.id}>{log.entry}</li>
-                                        ))}
-                                    </ul>
-                                </AuditTrail>
-                             </td>
-                             <td onMouseEnter={()=>setGraphV(asset.id,asset.name,asset.relation_type)}>
-                                <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childID={child} parentName={parent} relation={relationship}/>
-                                <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
-                             </td>
+    <div>
+        <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
+            <h1> Assets </h1>
+            <div className='searchbar-wrapper'>
+                <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
+            </div>
+            <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
+            <AuditTrail trigger={btn_gAT} setTrigger={setBtn_gAT}>
+                <ATSB sn={setAT_Search}/>
+            <ul>
+                {filteredGAT.map((gLog)=>(
+                    <li key={gLog.id}>{gLog.entry}</li>
+                ))}
+            </ul>
+            </AuditTrail>
+            <div className='table-container' >
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Link</th>
+                        <th>Creator</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    //intialising and filling the table from the database
+                    assets && assets.map((asset) =>(
+                        <tr key={asset.id}>
+                            <td>{asset.name}</td>
+                            <td>{asset.link}</td>
+                            <td>{asset.creator_name}</td>
+                            <td>{asset.creation_date}</td>
+                            <td>{asset.type}</td>
+                            <td>{asset.description}</td>
+                            <td>
+                                <td className='d-row'>
+                                    <button className = "delete"
+                                    style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
+                                </td>
+                                <td className='e-row'>
+                                <button className="btn" ><FiEdit /></button>
+                                </td>
+                                <td className='at-row'>
+                                    <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
+                                    <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
+                                        <ul>
+                                            {aT.map((log)=>(
+                                                <li key={log.id}>{log.entry}</li>
+                                            ))}
+                                        </ul>
+                                    </AuditTrail>
+                                </td>
+                                <td onMouseEnter={()=>setGraphV(asset.id,asset.name,asset.relation_type)}>
+                                    <AssetRelationships trigger={btn_RA} setTrigger={setBtn_RA} childID={child} parentName={parent} relation={relationship}/>
+                                    <button className='ra-row' onClick={()=>getRA()}><TbCirclesRelation /></button>
+                                </td>
 
-                         </td>
-                     </tr>
-                 ))}
-             </tbody>
-         </table>
-         </div>
-
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            </div>
+        </div>  
     </div>
   );
 };

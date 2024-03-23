@@ -18,6 +18,7 @@ function Home() {
             <Route path='/create-types' element={<Types/>} />
             <Route path='/' element={<AssetTable/>} />
             <Route path='/assets' element={<AssetTable/>} />
+            <Route path='/logout'element={<UserLogin/>}/>
         </Routes>
 
     </div>
