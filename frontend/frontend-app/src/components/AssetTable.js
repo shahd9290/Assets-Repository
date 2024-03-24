@@ -37,10 +37,11 @@ const Fetch = ({ onEdit }) => {
   const [at_search, setAT_Search]= useState(null);
   const tokens = JSON.stringify(bearerToken['bearer-tokens']);
  const token = tokens.slice(20,tokens.length-3);
+ 
 
   useEffect(() => {
     retrieveAssets();
-  }, []);
+  },);
 
   /**
    * Retrieves the log of an asset
@@ -48,8 +49,8 @@ const Fetch = ({ onEdit }) => {
    */
   function getAssetTrail(id){
     setBtn_AT(true)
-     //retrieving the audit trail for a specific asset from the backend
-    fetch(`http://localhost:8080/audit/log${id}`,
+        //retrieving the audit trail for a specific asset from the backend
+        fetch(`http://localhost:8080/audit/log${id}`,
         {method:'GET',
         headers: { 'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+ token
@@ -106,14 +107,12 @@ const Fetch = ({ onEdit }) => {
     })
     .then((data) => {
         if (data==null) {return"" }
-        console.log(data);
         setAssets(data);
     })
     .catch((error)=>{
         alert('Login to view assets ')
         
     });
-    console.log(token)
   }
 
   /**
@@ -165,10 +164,7 @@ const Fetch = ({ onEdit }) => {
    * Filters the assets whose logs will be retrieved
    */
   const filteredGAT= gAT.filter((gatR)=>{
-    if(at_search== null)
-        return gatR;
-    else if(gatR.entry.includes(at_search))
-        return gatR;
+        return (gatR.entry.includes(at_search)) ? gatR:"not found";
   })
   return (
         <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
