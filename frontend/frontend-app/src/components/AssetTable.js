@@ -50,7 +50,7 @@ const Fetch = ({ onEdit }) => {
   function getAssetTrail(id){
     setBtn_AT(true)
         //retrieving the audit trail for a specific asset from the backend
-        fetch(`http://localhost:8080/audit/log${id}`,
+        fetch(`http://localhost:8080/audit/log/${id}`,
         {method:'GET',
         headers: { 'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+ token
@@ -177,7 +177,7 @@ const Fetch = ({ onEdit }) => {
                 <ATSB sn={setAT_Search}/>
             <table className='audittrail-table'>
                 {filteredGAT.map((gLog)=>(
-                    <tr key={gLog.id}> {gLog.entry} </tr>
+                    <tr key={gLog.id}><td>{gLog.entry}</td></tr>
                 ))}
             </table>
             </AuditTrail>
@@ -216,11 +216,11 @@ const Fetch = ({ onEdit }) => {
                                 <td className='at-row'>
                                     <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
                                     <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
-                                        <ul>
+                                        <table className='audittrail-table'>
                                             {aT.map((log)=>(
-                                                <li key={log.id}>{log.entry}</li>
+                                                <tr key={log.id}><td>{log.entry}</td></tr>
                                             ))}
-                                        </ul>
+                                        </table>
                                     </AuditTrail>
                                 </td>
                                 <td onMouseEnter={()=>setGraphV(asset.id,asset.name,asset.relation_type)}>

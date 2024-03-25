@@ -87,7 +87,7 @@ table tr:nth-child(even) {
   margin-top: 10px;
   background-color: beige;
 }
-.audittrail-table tr{
+.audittrail-table tr td{
   width: 30vw;
   border: none;
   padding: 10px;
