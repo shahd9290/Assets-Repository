@@ -2,24 +2,26 @@ package com.example.assetsystembackend.api.payload.response;
 
 import java.util.List;
 
+/**
+ * Represents a response payload for JWT authentication, containing the access token, user ID, username, email, and roles.
+ */
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private Long id;
     private String username;
     private String email;
-    private List<String> roles;
-    private String role; //temp
+    private String role;
 
-    public JwtResponse(String accessToken, Long id, String username, String email,
-                       List<String> roles) {
-        this.token = accessToken;
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.roles = roles;
-    }
-
+    /**
+     * Constructs a JwtResponse object with the provided access token, user ID, username, email, and role.
+     *
+     * @param accessToken The access token.
+     * @param id The user ID.
+     * @param username The username.
+     * @param email The email.
+     * @param role The role assigned to the user.
+     */
     public JwtResponse(String accessToken, Long id, String username, String email,
                        String role) {
         this.token = accessToken;
@@ -69,10 +71,6 @@ public class JwtResponse {
     public void setEmail(String email) {
         this.email = email;
     }
-
-   // public List<String> getRoles() {
-   //     return roles;
-    //}
 
     public String getRole() {
         return role;

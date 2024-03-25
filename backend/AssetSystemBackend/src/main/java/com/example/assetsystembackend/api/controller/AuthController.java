@@ -6,7 +6,6 @@ import com.example.assetsystembackend.api.model.User;
 import com.example.assetsystembackend.api.payload.request.LoginRequest;
 import com.example.assetsystembackend.api.payload.request.SignupRequest;
 import com.example.assetsystembackend.api.payload.response.JwtResponse;
-import com.example.assetsystembackend.api.payload.response.MessageResponse;
 import com.example.assetsystembackend.api.repository.RoleRepository;
 import com.example.assetsystembackend.api.repository.UserRepository;
 import com.example.assetsystembackend.api.security.jwt.JwtUtils;
@@ -102,10 +101,10 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         // Check if email and username are already taken.
         if (userRepo.existsByUsername((signupRequest.getUsername()))) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
         if (userRepo.existsByEmail(signupRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email already in use!"));
+            return ResponseEntity.badRequest().body("Error: Email already in use!");
         }
 
         User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()));

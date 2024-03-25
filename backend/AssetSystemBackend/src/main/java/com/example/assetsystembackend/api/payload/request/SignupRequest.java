@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
+/**
+ * Represents a request payload for user signup, containing the username, password, email and role requested.
+ */
 public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 20)
