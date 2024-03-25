@@ -2,7 +2,10 @@ package com.example.assetsystembackend.api.model;
 
 import jakarta.persistence.*;
 
-
+/**
+ * Represents a backlog entity in the system, which stores messages related to assets.
+ * Each backlog entry has an ID, asset ID, and message.
+ */
 @Entity
 @Table(name = "backlog")
 public class BackLog {
