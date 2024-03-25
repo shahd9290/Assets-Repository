@@ -20,16 +20,16 @@ public class TypeController {
     }
 
     @GetMapping("/get-type-data/test")
-    public ResponseEntity<List<Object[]>> getAllTypes(@PathVariable String name){
-        List<Object[]> tableData= service.retrieveData(name);
+    public ResponseEntity<List<Object[]>> getAllTypes(@PathVariable String name) {
+        List<Object[]> tableData = service.retrieveData(name);
         if (tableData.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tableData);
     }
 
     @GetMapping("/get-columns/test")
-    public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName){
-        List<String> columns= service.getTableColumns(tableName);
+    public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName) {
+        List<String> columns = service.getTableColumns(tableName);
         if (columns.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(columns);
@@ -42,7 +42,6 @@ public class TypeController {
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tables);
     }
-
 
     @PostMapping("/add-type")
     public ResponseEntity<Object> addType(@RequestBody Map<String, Object> payload) {
@@ -60,7 +59,7 @@ public class TypeController {
 
         System.out.println(payload.get("columns").getClass());
         if (!service.createTable(tableName, columns))
-            return ResponseEntity.badRequest().body("Table '" +tableName+ "' already exists.");
+            return ResponseEntity.badRequest().body("Table '" + tableName + "' already exists.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Data added successfully");
     }
@@ -73,11 +72,10 @@ public class TypeController {
         String tableName = (String) payload.get("table_name");
 
         if (!service.deleteTable(tableName))
-            return ResponseEntity.badRequest().body("Table '" +tableName+ "' doesn't exist.");
+            return ResponseEntity.badRequest().body("Table '" + tableName + "' doesn't exist.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
     }
-
 
     @PostMapping("/insert-data/test")
     public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
@@ -103,8 +101,10 @@ public class TypeController {
     }
 
     /**
-     * Method to verify the structure of the data received matches the expected one from the API.
+     * Method to verify the structure of the data received matches the expected one
+     * from the API.
      * More checks can be added, now contains only the minimum the requirements.
+     * 
      * @param payload The data received
      * @return {@code true} if the data matches the requirements, else {@code false}
      */
