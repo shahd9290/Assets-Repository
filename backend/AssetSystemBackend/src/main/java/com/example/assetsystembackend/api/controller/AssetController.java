@@ -14,23 +14,53 @@ import java.time.LocalDate;
 import java.sql.Date;
 import java.util.*;
 
-
+/**
+ * Controller used to manage assets, including addition, removal and retrieval.
+ */
 @RestController
 public class AssetController {
+
 
     private final AssetService assetService;
     private final DynamicService dynamicService;
     private final BackLogService backLogService;
 
+    /**
+     * Invalid ID!
+     */
     public static final String INVALID_ID_MSG = "Invalid ID!";
+    /**
+     * Insertion successful!
+     */
     public static final String SUCCESS_MSG = "Insertion successful!";
+    /**
+     * Removal successful!
+     */
     public static final String REMOVAL_MSG = "Removal successful!";
+    /**
+     * Missing data!
+     */
     public static final String MISSING_DATA_MSG = "Missing data!";
+    /**
+     * Invalid Type!
+     */
     public static final String INVALID_TYPE_MSG = "Invalid Type!";
+    /**
+     * Asset has dependencies! Remove them First!
+     */
     public static final String DEPENDENCY_MSG = "Asset has dependencies! Remove them First!";
+    /**
+     * Please specify the relation between the parent and child assets!
+     */
     public static final String RELATION_MSG = "Please specify the relation between the parent and child assets!";
 
 
+    /**
+     * Initializes services required for the asset controller to function.
+     * @param assetService Works with the assets table in the database.
+     * @param dynamicService Works with the specified type table in the database.
+     * @param backLogService Works with backlogs to store changes
+     */
     @Autowired
     public AssetController(AssetService assetService, DynamicService dynamicService, BackLogService backLogService) {
         this.assetService = assetService;
@@ -43,6 +73,15 @@ public class AssetController {
     {
         "asset": { asset fields}
         "type" : {type fields}
+     */
+    /**
+     * Creates an asset to be inserted into the asset management system.<br>
+     * This will take various attributes from a provided payload, and uses them to insert them into their respected fields in the database.<br>
+     * Contents under the "asset" key will be inserted automatically via Spring Boot. Contents under the "type" key will be inserted manually
+     * via a pre-written function.
+     *
+     * @param payload The data provided via a POST request to be inserted into the table.
+     * @return A confirmation message informing the user if insertion was successful.
      */
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/add-new-asset")
@@ -99,6 +138,12 @@ public class AssetController {
         return ResponseEntity.ok(SUCCESS_MSG);
     }
 
+    /**
+     * Deletes an asset from the asset management system.<br>
+     * This takes an id from the provided payload, and will attempt to delete an asset from both the asset and "type" tables where data is held.
+     * @param payload The id provided via a POST request
+     * @return A confirmation message informing the user if removal was successful
+     */
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody Map<String, Object> payload) {
@@ -132,8 +177,11 @@ public class AssetController {
         }
     }
 
-    @GetMapping("/get-assets")
-    public List<Map<String, Object>> getAssets() {
+    /**
+     * Returns all the assets in the database.
+     * @return A list of assets taken from the database.
+     */
+    private List<Map<String, Object>> getAssets() {
         List<Asset> assetsInfo = assetService.getAllAssets();
         ListIterator<Asset> assetIterator = assetsInfo.listIterator();
 
@@ -182,7 +230,15 @@ public class AssetController {
         return output;
     }
 
-    @PreAuthorize("hasAnyRole('ROL_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
+    /**
+     * Returns assets from the database table which meet a given set of criteria
+     * <p>
+     *     Assets can be filtered by a dedicated search term, date, type or creator. These filters will be provided in the payload from the POST request.
+     * </p>
+     * @param payload The criteria for filtering through the assets
+     * @return An updated assets listing based on the filters provided.
+     */
+    @PreAuthorize("hasAnyRole('ROLE_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();
