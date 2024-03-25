@@ -4,24 +4,69 @@
 
 body {
     font-family: Arial, sans-serif;
+    background-image: url("https://images.unsplash.com/photo-1454117096348-e4abbeba002c?ixlib=rb-4.0.3");
 }
 .container {
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
 }
 
-form, .button-container {
+.container input {
+  width: 70%;
+  clear: both;
+}
+
+
+form {
     margin-bottom: 20px;
     border: 1px solid #ddd;
-    padding: 15px;
+    padding: 10px;
     border-radius: 5px;
-}
-label, select, input, textarea {
-    display: block;
+    text-align: center;
+    input-align: center;
     align-items: center;
-    width: 60%;
-    margin: 10px 225px;
+}
+
+.button-container {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  align-items: center;
+  display: center;
+  clear: both;
+  display: block;
+}
+
+input[type="text"] {
+             display: block;
+             margin : 0 auto;
+             padding: 8px;
+        }
+
+input[type="password"] {
+            display: block;
+            margin : 0 auto;
+            padding: 8px;
+        }
+
+select, textarea {
+    display: inline-block;
+    align-items: center;
+    width: 45%;
+    margin: 10px 260px;
     padding: 8px;
+}
+
+label {
+  display: block;
+  align-items: center;
+  text-align: center;
+}
+
+.select {
+  background-color: DodgerBlue;
 }
 
 

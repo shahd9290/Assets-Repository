@@ -4,6 +4,7 @@ import com.example.assetsystembackend.api.service.DynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,7 @@ public class TypeController {
      *
      * @return ResponseEntity containing an Object representing available types.
      */
+
     @GetMapping("/get-types")
     public ResponseEntity<Object> getType() {
         List<String> tables = service.getTypeTableNames();
@@ -66,6 +68,7 @@ public class TypeController {
      * @param payload The payload containing table name and columns.
      * @return ResponseEntity containing a status message.
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add-type")
     public ResponseEntity<Object> addType(@RequestBody Map<String, Object> payload) {
         if (!checkDataValid(payload))
@@ -92,6 +95,7 @@ public class TypeController {
      * @param payload The payload containing table name.
      * @return ResponseEntity containing a status message.
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/delete-type")
     public ResponseEntity<Object> deleteType(@RequestBody Map<String, Object> payload) {
         if (!payload.containsKey("table_name"))
@@ -130,6 +134,7 @@ public class TypeController {
      * @param data The data to be deleted.
      * @return ResponseEntity containing a status message.
      */
+
     @PostMapping("/remove-data/{tableName}")
     public ResponseEntity<Object> deleteData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
         if (!isValidInsertData(tableName, data))

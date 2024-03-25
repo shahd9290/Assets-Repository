@@ -3,11 +3,10 @@ import './App.css';
 
 function Types() {
   return (
-    <div className="App">
+    <div className="App" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <head>
         <title>Type Management System</title>
       </head>
-      <body>
         <h1>Create New Type</h1>
         <form>
           <label for="type-title">Title:</label>
@@ -21,7 +20,6 @@ function Types() {
           <button id="createButton" onclick="handleButtonClick(id)" type="submit">Create Type</button>
         </form>
         <button id="deleteButton" onclick="handleButtonClick(id)">Delete Type</button>
-      </body>
     </div>
   );
 }
