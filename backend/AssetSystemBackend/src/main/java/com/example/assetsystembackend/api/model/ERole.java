@@ -1,4 +1,4 @@
-package com.example.assetsystembackend.api.models;
+package com.example.assetsystembackend.api.model;
 
 public enum ERole {
     ROLE_VIEWER("ROLE_VIEWER"),

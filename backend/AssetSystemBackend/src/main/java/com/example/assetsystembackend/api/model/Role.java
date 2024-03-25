@@ -1,4 +1,4 @@
-package com.example.assetsystembackend.api.models;
+package com.example.assetsystembackend.api.model;
 
 import jakarta.persistence.*;
 

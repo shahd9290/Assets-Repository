@@ -1,8 +1,8 @@
 package com.example.assetsystembackend.api.controller;
 
-import com.example.assetsystembackend.api.models.ERole;
-import com.example.assetsystembackend.api.models.Role;
-import com.example.assetsystembackend.api.models.User;
+import com.example.assetsystembackend.api.model.ERole;
+import com.example.assetsystembackend.api.model.Role;
+import com.example.assetsystembackend.api.model.User;
 import com.example.assetsystembackend.api.payload.request.LoginRequest;
 import com.example.assetsystembackend.api.payload.request.SignupRequest;
 import com.example.assetsystembackend.api.payload.response.JwtResponse;
@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Controller used to manage users, including creation and authentication.

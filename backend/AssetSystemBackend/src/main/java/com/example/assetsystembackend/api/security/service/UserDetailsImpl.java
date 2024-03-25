@@ -1,6 +1,6 @@
 package com.example.assetsystembackend.api.security.service;
 
-import com.example.assetsystembackend.api.models.User;
+import com.example.assetsystembackend.api.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
 package com.example.assetsystembackend.api.security.service;
 
-import com.example.assetsystembackend.api.models.User;
+import com.example.assetsystembackend.api.model.User;
 import com.example.assetsystembackend.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
