@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of Spring Security UserDetails interface representing user details.
+ */
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -19,6 +22,15 @@ public class UserDetailsImpl implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
+    /**
+     * Constructs a UserDetailsImpl object with the provided user details and authorities.
+     *
+     * @param id The user ID.
+     * @param username The username.
+     * @param email The email.
+     * @param password The password.
+     * @param authorities The authorities (roles) assigned to the user.
+     */
     public UserDetailsImpl(Long id, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities){
         this.id = id;
@@ -28,6 +40,12 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    /**
+     * Builds a UserDetailsImpl object based on the provided User entity.
+     *
+     * @param user The User entity.
+     * @return UserDetailsImpl object representing user details.
+     */
     public static UserDetailsImpl build(User user){
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
