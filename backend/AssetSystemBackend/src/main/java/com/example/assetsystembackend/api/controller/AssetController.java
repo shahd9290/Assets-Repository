@@ -130,6 +130,7 @@ public class AssetController {
         String link = assetData.getOrDefault("link", null);
 
         Asset newAsset = new Asset(assetData.get("name"), assetData.get("creatorname"), date, description, type, link, parent_id == 0 ? null : parent_id, relationType);
+        // ID was automatically generated, still needed for the type table.
         long tempID = assetService.saveNewAsset(newAsset);
         typeData.put("id", tempID);
         dynamicService.insertData(type, typeData);
@@ -147,11 +148,12 @@ public class AssetController {
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete-asset")
     public ResponseEntity<String> deleteAsset(@RequestBody Map<String, Object> payload) {
+        // Check ID was provided
         if (!payload.containsKey("id"))
             return ResponseEntity.badRequest().body(MISSING_DATA_MSG + "(Missing Asset ID)");
 
         long assetID = ((Integer) payload.get("id")).longValue();
-
+        // Check to see that the asset exists and does not have any dependent assets.
         Optional<Asset> returnedAsset = assetService.findByID(assetID);
         if (returnedAsset.isEmpty())
             return ResponseEntity.badRequest().body(INVALID_ID_MSG);
@@ -166,6 +168,7 @@ public class AssetController {
             boolean typeDeletion = dynamicService.deleteData(typeName, assetID);
             backLogService.addAssetDeletion(returnedAsset.get());
 
+            // Must be deleted from both tables to be successful.
             if (!assetDeletion && !typeDeletion) {
                 return ResponseEntity.badRequest().body(INVALID_ID_MSG);
             }
@@ -182,20 +185,22 @@ public class AssetController {
      * @return A list of assets taken from the database.
      */
     private List<Map<String, Object>> getAssets() {
+        // Retrievs data from the assets table. NOT type table.
         List<Asset> assetsInfo = assetService.getAllAssets();
         ListIterator<Asset> assetIterator = assetsInfo.listIterator();
 
+        // Store type table information
         Map<String, List<String>> typeColumns = new HashMap<>();
         Map<String, List<Object[]>> typeDataMap = new HashMap<>();
 
         List<Map<String, Object>> output = new ArrayList<>();
-
 
         while (assetIterator.hasNext()) {
             Asset asset = assetIterator.next();
             String type = asset.getType();
             Map<String, Object> assetData = new HashMap<>();
 
+            // Add all data from the assets table to the output.
             assetData.put("id", asset.getId());
             assetData.put("name", asset.getName());
             assetData.put("creator_name", asset.getCreatorName());
@@ -215,7 +220,7 @@ public class AssetController {
             List<Object[]> entries = typeDataMap.get(type); // all entries under one type
             List<String> columns = typeColumns.get(type);
 
-
+            // Add all data from the type table to the output.
             for (Object[] entry : entries) {
                 for (int i = 1; i < columns.size(); i++) {
                     Long id = Long.parseLong(String.valueOf(entry[0]));
@@ -241,6 +246,7 @@ public class AssetController {
     @PreAuthorize("hasAnyRole('ROLE_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
+        // Get all assets unfiltered
         List<Map<String, Object>> assetList = getAssets();
         List<Map<String, Object>> output = new ArrayList<>();
 
@@ -255,6 +261,7 @@ public class AssetController {
          * user
          */
 
+        // Check for each filter option. If provided then use the given value, otherwise null.
         String type = (String) payload.getOrDefault("type", null);
         Date date_before = (payload.containsKey("date_before") ? Date.valueOf((String) payload.get("date_before")) : null);
         Date date_after = (payload.containsKey("date_after") ? Date.valueOf((String) payload.get("date_after")) : null);
