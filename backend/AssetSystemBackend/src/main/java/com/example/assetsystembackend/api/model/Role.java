@@ -2,6 +2,10 @@ package com.example.assetsystembackend.api.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents a role entity in the system, which defines user roles.
+ * Each role has an ID and a name.
+ */
 @Entity
 @Table(name = "roles")
 public class Role {

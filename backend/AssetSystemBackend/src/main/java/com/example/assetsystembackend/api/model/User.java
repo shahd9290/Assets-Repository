@@ -8,6 +8,10 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Represents a user entity in the system, storing user details such as username, email, and password.
+ * Each user has an ID, username, email, password, and associated roles.
+ */
 @Entity
 @Table(name = "users",
 uniqueConstraints = {
@@ -32,14 +36,24 @@ public class User {
     @Size(max = 120)
     private String password;
 
+    // Create secondary table here used to link each user to the roles they may have.
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    // Required for JPA
     public User(){
 
     }
+
+    /**
+     * Constructs a user object with the specified username, email, and password.
+     *
+     * @param username The username of the user.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     */
     public User(String username, String email, String password){
         this.username = username;
         this.email = email;
