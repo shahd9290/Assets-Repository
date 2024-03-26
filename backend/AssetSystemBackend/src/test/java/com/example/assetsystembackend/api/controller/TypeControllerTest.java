@@ -1,9 +1,14 @@
 package com.example.assetsystembackend.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -13,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,19 @@ public class TypeControllerTest {
     @Autowired
     private JdbcTemplate template;
 
+    private String token;
+
+    @Value("${jwt.secret}")
+    private String secret;
+    @BeforeEach
+    public void generateToken() {
+        token = Jwts.builder()
+                .setSubject("admin")
+                .setExpiration(new Date((new Date()).getTime() + 10000))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
     @Test
     public void testAddTypeEndpoint() throws Exception {
         //Delete table
@@ -45,6 +64,7 @@ public class TypeControllerTest {
         String payloadJson = objectMapper.writeValueAsString(payload);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/type/add-type")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payloadJson))
                 .andExpect(status().isCreated())
@@ -66,6 +86,7 @@ public class TypeControllerTest {
         String payloadJson = objectMapper.writeValueAsString(payload);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/type/add-type")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payloadJson))
                 .andExpect(status().isBadRequest())
@@ -80,7 +101,8 @@ public class TypeControllerTest {
     public void testGetTypeEndpoint() throws Exception {
         String tableName = "users"; // Assuming a table with this name exists
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-type-data/{name}", tableName))
+        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-type-data/{name}", tableName)
+                    .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -98,6 +120,7 @@ public class TypeControllerTest {
         payload.put("column2", "value2");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isCreated())
@@ -120,6 +143,7 @@ public class TypeControllerTest {
         data.put("column3", "value3"); // Wrong column (for testing)
 
         mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(data)))
                 .andExpect(status().isBadRequest())
@@ -140,9 +164,10 @@ public class TypeControllerTest {
 
         String payloadJson = objectMapper.writeValueAsString(payload);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/delete-asset")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(payloadJson))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payloadJson))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Data removed successfully"));
 
