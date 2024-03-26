@@ -46,7 +46,7 @@ function Types() {
 
 
   return (
-    <div className="App">
+    <div className="App" style={{ marginLeft: '15%', padding: '1px 16px', height: '1000px' }}>
       <h1>Create New Type</h1>
       <form onSubmit={handleSubmit}> {/* Ensure handleSubmit is defined */}
         <label htmlFor="table_name">Type:</label>
