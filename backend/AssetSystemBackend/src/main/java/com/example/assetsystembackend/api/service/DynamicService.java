@@ -60,23 +60,25 @@ public class DynamicService {
      *
      * @return A list of unique type tables
      */
-    public HashMap<Integer, String> getTypeTableNames() {
+    public List<Object> getTypes() {
         String query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';";
         String[] sysTables = {"assets", "assets_relations", "backlog", "roles", "user_roles", "users"};
+        List<Object> output = new ArrayList<>();
         return template.query(query, rs -> {
 
-            HashMap<Integer, String> columns = new HashMap<>();
-            int id = 0;
             table:while (rs.next()) {
+                HashMap<String, Object> columns = new HashMap<>();
                 String table = rs.getString("table_name");
                 for (String sysTable: sysTables) {
                     if (table.equals(sysTable))
                         continue table;
                 }
-                columns.put(id++, table);
+                columns.put("type", table);
+                columns.put("columns", getTableColumns(table));
+                output.add(columns);
             }
 
-            return columns;
+            return output;
         });
     }
 
