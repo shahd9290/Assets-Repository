@@ -173,9 +173,9 @@ const Fetch = ({ onEdit }) => {
                 <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
             </div>
             <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
-            <AuditTrail className='gATPopup' trigger={btn_gAT} setTrigger={setBtn_gAT}>
+            <AuditTrail className='gATPopup' trigger={btn_gAT} setTrigger={setBtn_gAT} style={{ overflow: 'scroll' }}>
                 <ATSB sn={setAT_Search}/>
-            <table className='audittrail-table'>
+            <table className='audittrail-table' >
                 {filteredGAT.map((gLog)=>(
                     <tr key={gLog.id}><td>{gLog.entry}</td></tr>
                 ))}
@@ -216,9 +216,12 @@ const Fetch = ({ onEdit }) => {
                                 <td className='at-row'>
                                     <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
                                     <AuditTrail trigger={btn_aT} setTrigger={setBtn_AT}>
+                                        <h3>Audit Trail for the asset</h3>
                                         <table className='audittrail-table'>
                                             {aT.map((log)=>(
+                                                <tbody>
                                                 <tr key={log.id}><td>{log.entry}</td></tr>
+                                                </tbody>
                                             ))}
                                         </table>
                                     </AuditTrail>

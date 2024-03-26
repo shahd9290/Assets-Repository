@@ -94,11 +94,11 @@ export default function App(props) {
   return ((props.trigger)?(
 
     <div className='asset-relationships' onMouseEnter={()=> makeGraph(props.childID,props.parentName,props.relation)} >
-      
+      <button className='close-btn' onClick={()=>props.setTrigger(false)}><CgClose /></button> 
       { child.map( (c)=>(
         <div className="inner-ar" key={c.id} onMouseEnter={()=>setChildName(c.name)}>
            <p> {parent} {relation} {childName}</p>
-        <button className='close-btn' onClick={()=>props.setTrigger(false)}><CgClose /></button> 
+
        
         <ReactFlow nodes={assets} edges={edges}>
           

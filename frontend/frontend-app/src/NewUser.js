@@ -35,7 +35,7 @@ function NewUser() {
  
      }catch (error){
        console.error('N/a');
-       alert('no bueno')
+       alert('failed to register user')
      };
    }
   return (
