@@ -26,7 +26,12 @@ function UserLogin() {
         "id":1,
         "token":loggedIn.data.token};
       
-      const storeToken = await axios.patch('http://localhost:3500/bearer-tokens/1', userToken)
+      const storeToken = await axios.patch('http://localhost:3500/bearer-tokens/1', userToken);
+      const userLoggedIn = {
+        "id":1,
+        "name":username
+      }
+      const storeUsername = await axios.patch('http://localhost:3500/users/1', userLoggedIn);
       console.log('Login successful!');
       alert("Login successful!");
 

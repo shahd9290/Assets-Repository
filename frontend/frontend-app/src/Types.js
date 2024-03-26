@@ -23,11 +23,9 @@ function Types() {
       })
     })
     .then( (item)=>{
-      item.text()
-      .then((response)=>{
-          console.log(response);
-          alert(response);
-      })
+     
+          console.log( item.text());
+          alert( item.text());
   })
     .catch((error)=>{
       console.log(error);
