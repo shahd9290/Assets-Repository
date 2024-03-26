@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class TypeController {
 
     @GetMapping("/get-types")
     public ResponseEntity<Object> getType() {
-        List<String> tables = service.getTypeTableNames();
+        HashMap<Integer, String> tables = service.getTypeTableNames();
         if (tables.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tables);

@@ -74,7 +74,7 @@ public class AssetController {
         String type = assetData.get("type");
 
         // Check if type table exists
-        if (!dynamicService.getTypeTableNames().contains(type)) {
+        if (!dynamicService.getTypeTableNames().containsValue(type)) {
             return ResponseEntity.badRequest().body(INVALID_TYPE_MSG + "\nEnsure the Type exists.");
         }
         // Check if columns keys are actual columns in the table
