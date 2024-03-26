@@ -1,14 +1,12 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactFlow, {
   useNodesState,
-  useEdgesState,
-  addEdge,
+  useEdgesState
 } from 'reactflow';
 import { CgClose } from "react-icons/cg"; 
 import 'reactflow/dist/style.css';
 import './AssetRelationships.css'
-
-
+import bearerToken from './tokens/token.json'
 
 const initialAssets = [
   { id: '1', position: { x: 60, y: 0 }, data: { label: '-' } },
@@ -16,17 +14,20 @@ const initialAssets = [
 ];
 
 
- 
+/**
+ * Graph that shows relationship between assets
+ * @param {*} props child,parent and relation variables from AssetTable.js
+ * @returns html code for a popup that renders a graph of the relationship between assets
+ */ 
 export default function App(props) {
 
   //initialising states that need to be kept by the component
+  const tokens = JSON.stringify(bearerToken['bearer-tokens']);
+  const token = tokens.slice(20,tokens.length-3);
   const [child,setChild] = useState([]);  
   const [parent,setParent] = useState('Asset 2');  
   const [relation, setRelation] = useState(props.relation);
-
   const initialEdges = [{ id: 'e1-2', source: '1', target: '2', label:'-',type: 'step'}];
-
-
   const [assets, setNodes] = useNodesState(initialAssets);
   const [edges, setEdges] = useEdgesState(initialEdges);
   const [childName, setChildName] = useState("asset");
@@ -64,11 +65,18 @@ export default function App(props) {
   );
   }, [childName,parent, relation, setEdges,setNodes]);
 
-
+  /**
+   * Initialises the state of the variables used to render the graph
+   * @param {*} childID ID of child asset
+   * @param {*} parent name of parent asset
+   * @param {*} edgeR relation between assets
+   */
   function makeGraph(childID,parent,edgeR){
     fetch('http://localhost:8080/search',
     {method:'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+ token 
+  },
     body:JSON.stringify({"parent_id":childID})})
     .then((res) => {
         return res.json();
@@ -77,7 +85,6 @@ export default function App(props) {
             if (data===null) {
               return console.log("no assets returned");            
             }
-            console.log(data);
             setChild(data);
         });
     setParent(parent);
