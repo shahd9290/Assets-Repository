@@ -182,7 +182,7 @@ public class AssetController {
         return output;
     }
 
-    @PreAuthorize("hasAnyRole('ROL_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_VIEWER', 'ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestBody Map<String, Object> payload) {
         List<Map<String, Object>> assetList = getAssets();

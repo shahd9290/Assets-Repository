@@ -173,7 +173,7 @@ const Fetch = ({ onEdit }) => {
                 <SearchBar sn={setSTerm} st={setSType} su={setSUser} />
             </div>
             <button className='gAT' onClick={()=>getGTA()}><AiOutlineAudit /></button>
-            <AuditTrail className='gATPopup' trigger={btn_gAT} setTrigger={setBtn_gAT} style={{ overflow: 'scroll' }}>
+            <AuditTrail className='gATPopup' trigger={btn_gAT} setTrigger={setBtn_gAT}>
                 <ATSB sn={setAT_Search}/>
             <table className='audittrail-table' >
                 {filteredGAT.map((gLog)=>(

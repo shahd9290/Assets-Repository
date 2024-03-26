@@ -1,48 +1,39 @@
 import './App.css';
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import './App.css';
-
+import bearerToken from './components/tokens/token.json'
 
 function Types() {
-  const [formData, setFormData] = useState({
-    table_name: '',
-    columns: [],
-  });
+  const tokens = JSON.stringify(bearerToken['bearer-tokens']);
+  const token = tokens.slice(20,tokens.length-3);
+  const [type, setType] = useState("");
+  const[columns, setColumns] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const payload = {
-        table_name: formData.table_name,
-        columns: formData.columns.split(",")
-      };
-      const response = await axios.post(`http://localhost:8080/type/add-type`, payload);
-      console.log(response.data);
-      alert("Type created successfully!");
-      setFormData({
-        table_name: '',
-        columns: []
-      });
-
-
-    } catch (error) {
-      // Error handling
-      const errorMessage = error.response ? error.response.data : error.message;
-      console.error('Error submitting form:', errorMessage);
-      alert("Failed to create type. Error: " + (typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage, null, 2)));
-    }
-  };
+  const handleSubmit = ()=>{
+    fetch("http://localhost:8080/type/add-type",{
+      method:'POST',
+      headers:{
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer '+ token
+      },
+      body:JSON.stringify({
+        "table_name": type,
+        "columns": columns.split(',')
+      })
+    })
+    .then( (item)=>{
+      item.text()
+      .then((response)=>{
+          console.log(response);
+          alert(response);
+      })
+  })
+    .catch((error)=>{
+      console.log(error);
+      alert(error)
+    });
+  }
 
 
   return (
@@ -50,20 +41,22 @@ function Types() {
       <h1>Create New Type</h1>
       <form onSubmit={handleSubmit}> {/* Ensure handleSubmit is defined */}
         <label htmlFor="table_name">Type:</label>
-        <textarea
+        <input
           id="table_name"
           name="table_name"
+          type='text'
           required
-          value={formData.table_name}
-          onChange={handleChange}
+          value={type}
+          onChange={(event)=>setType(event.target.value)}
         />
         <label htmlFor="type-columns">Column (Seperated by commas):</label>
         <textarea
           id="type-columns"
           name="columns"
+          type='text'
           required
-          value={formData.columns}
-          onChange={handleChange}
+          value={columns}
+          onChange={(e)=>setColumns(e.target.value)}
         />
         <button type="submit">Create type</button>
       </form>

@@ -95,7 +95,7 @@ function App() {
           onChange={handleChange}
         >
           <option value="">-- Select a Type --</option>
-          <option value="Software Module">Software Module</option>
+          <option value="colours">Software Module</option>
           <option value="Documentation">Documentation</option>
         </select>
         <p></p>
