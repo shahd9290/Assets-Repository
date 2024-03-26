@@ -57,7 +57,7 @@ public class TypeController {
 
     @GetMapping("/get-types")
     public ResponseEntity<Object> getType() {
-        HashMap<Integer, String> tables = service.getTypeTableNames();
+        List<Object> tables = service.getTypes();
         if (tables.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tables);

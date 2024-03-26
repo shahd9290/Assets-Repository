@@ -74,7 +74,7 @@ public class AssetController {
         String type = assetData.get("type");
 
         // Check if type table exists
-        if (!dynamicService.getTypeTableNames().containsValue(type)) {
+        if (!checkValidType(type)) {
             return ResponseEntity.badRequest().body(INVALID_TYPE_MSG + "\nEnsure the Type exists.");
         }
         // Check if columns keys are actual columns in the table
@@ -236,5 +236,17 @@ public class AssetController {
 
         payload.put("parent_id", parent_id.intValue());
         return !search(payload).isEmpty();
+    }
+
+    private boolean checkValidType(String type) {
+        List<Object> tableNames = dynamicService.getTypes();
+
+        for (Object table : tableNames){
+            HashMap<String, Object> tableMap = (HashMap<String, Object>) table;
+            if (tableMap.get("type").equals(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
