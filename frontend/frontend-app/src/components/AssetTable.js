@@ -164,7 +164,7 @@ const Fetch = ({ onEdit }) => {
    * Filters the assets whose logs will be retrieved
    */
   const filteredGAT= gAT.filter((gatR)=>{
-        return (gatR.entry.includes(at_search))
+    return (at_search===null ? gatR: gatR.entry.includes(at_search))
   })
   return (
         <div className='main_container' style={{ marginLeft: '0%', padding: '1px 16px', height: '1000px' }}>
