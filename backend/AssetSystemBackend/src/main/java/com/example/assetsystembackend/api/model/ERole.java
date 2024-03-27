@@ -1,6 +1,10 @@
-package com.example.assetsystembackend.api.models;
+package com.example.assetsystembackend.api.model;
 
+/**
+ * Represents the different possible roles that a user may have.
+ */
 public enum ERole {
+
     ROLE_VIEWER("ROLE_VIEWER"),
     ROLE_USER("ROLE_USER"),
     ROLE_ADMIN("ROLE_ADMIN");

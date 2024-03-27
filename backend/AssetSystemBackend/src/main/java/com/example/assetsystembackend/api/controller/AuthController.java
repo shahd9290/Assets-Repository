@@ -1,12 +1,11 @@
 package com.example.assetsystembackend.api.controller;
 
-import com.example.assetsystembackend.api.models.ERole;
-import com.example.assetsystembackend.api.models.Role;
-import com.example.assetsystembackend.api.models.User;
+import com.example.assetsystembackend.api.model.ERole;
+import com.example.assetsystembackend.api.model.Role;
+import com.example.assetsystembackend.api.model.User;
 import com.example.assetsystembackend.api.payload.request.LoginRequest;
 import com.example.assetsystembackend.api.payload.request.SignupRequest;
 import com.example.assetsystembackend.api.payload.response.JwtResponse;
-import com.example.assetsystembackend.api.payload.response.MessageResponse;
 import com.example.assetsystembackend.api.repository.RoleRepository;
 import com.example.assetsystembackend.api.repository.UserRepository;
 import com.example.assetsystembackend.api.security.jwt.JwtUtils;
@@ -27,8 +26,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+/**
+ * Controller used to manage users, including creation and authentication.
+ */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/auth")
@@ -49,44 +50,61 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    /**
+     * Authenticates a user by validating the provided login credentials and generates a JWT token upon successful authentication.
+     *
+     * @param loginRequest The login request containing the username and password to authenticate.
+     * @return A summary of the user details, including the token used throughout the system.
+     */
     @PostMapping("/signin")
-            public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        // Use credentials to authenticate
         Authentication authentication = authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                         loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = "hello";
+        // Initialize JWT token;
+        String jwt = "";
+        // Generate token.
         if (authentication.isAuthenticated()) {
-             jwt = jwtUtils.generateJwtToken(authentication);
-        }else {
+            jwt = jwtUtils.generateJwtToken(authentication);
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        // Extract user details.
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .toList();
         String role;
-        //if (roles.contains(ERole.ROLE_ADMIN.toString())){
         if (Objects.equals(roles.get(0), ERole.ROLE_ADMIN.toString())) {
             role = "admin";
         } else if (Objects.equals(roles.get(0), ERole.ROLE_USER.toString())) {
             role = "user";
-        }else{
+        } else {
             role = "viewer";
         }
+        // Output
         JwtResponse test = new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
                 userDetails.getEmail(), role);
 
         return ResponseEntity.ok(test);
     }
 
+    /**
+     * Registers a new user with the provided signup information.
+     *
+     * @param signupRequest The signup request containing user details such as username, email, and password.
+     * @return A response dependent on whether the user has been created, already exists or details are missing.
+     */
     @PostMapping("/signup")
-            public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        // Check if email and username are already taken.
         if (userRepo.existsByUsername((signupRequest.getUsername()))) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body("Error: Username is already taken!");
         }
         if (userRepo.existsByEmail(signupRequest.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email already in use!"));
+            return ResponseEntity.badRequest().body("Error: Email already in use!");
         }
 
         User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()));
@@ -94,6 +112,8 @@ public class AuthController {
         Set<String> strRoles = signupRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
+        // Check if roles are valid. If none provided then return exception.
+        // Else assign the corresponding role to the user.
         if (strRoles == null) {
             Role viewerRole = roleRepo.findByName(ERole.ROLE_VIEWER)
                     .orElseThrow(() -> new RuntimeException("Error: Role not found."));

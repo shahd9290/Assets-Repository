@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 
+/**
+ * Represents an asset entity stored in the database, which may include various types of digital content.
+ * Assets may have relationships with other assets identified by parent_id and relationType.
+ */
 @Entity
 @Table(name = "assets")
 @SecondaryTable(name="assets_relations", pkJoinColumns = @PrimaryKeyJoinColumn(name = "asset_id"))
-
 public class Asset {
 
     @Id
@@ -39,6 +42,18 @@ public class Asset {
     @Column(name="relation_type", table="assets_relations")
     private String relationType;
 
+    /**
+     * Constructs an asset object with specified properties.
+     *
+     * @param name The name of the asset.
+     * @param creatorName The name of the creator of the asset.
+     * @param creationDate The date when the asset was created.
+     * @param description The description of the asset.
+     * @param type The type/category of the asset.
+     * @param link The link/URL associated with the asset.
+     * @param parent_id The ID of the parent asset in case of a relationship.
+     * @param relationType The type of relationship with the parent asset.
+     */
     public Asset( String name, String creatorName, Date creationDate, String description, String type, String link, Long parent_id, String relationType) {
         this.name = name;
         this.creatorName = creatorName;

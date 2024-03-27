@@ -2,6 +2,9 @@ package com.example.assetsystembackend.api.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Represents a request payload for user login, containing the username and password
+ */
 public class LoginRequest {
     @NotBlank
     private String username;

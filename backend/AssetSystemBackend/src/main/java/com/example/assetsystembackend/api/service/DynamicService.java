@@ -123,6 +123,12 @@ public class DynamicService {
 
     }
 
+    /**
+     * Deletes a  table in the database with the specified tableName.
+     *
+     * @param tableName The name of the table to be created.
+     * @return {@code true} if the table deletion is successful, {@code false} otherwise.
+     */
     public boolean deleteTable(String tableName) {
         try {
             StringBuilder query = new StringBuilder("DROP TABLE " + tableName + ";");
@@ -166,6 +172,13 @@ public class DynamicService {
         }
     }
 
+    /**
+     * Removes data from the specified table.
+     *
+     * @param tableName The name of the table where the data will be inserted
+     * @param id The id representing the asset that is to be deleted from the table.
+     * @return {@code true} if the deletion was successful, {@code false} otherwise
+     */
     public boolean deleteData(String tableName, long id) {
 
         String query = String.format("DELETE FROM %s WHERE id = %d", tableName, id);

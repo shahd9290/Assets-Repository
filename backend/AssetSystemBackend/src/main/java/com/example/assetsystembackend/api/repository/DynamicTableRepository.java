@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository class for managing tables and data contained within them in the database.
+ */
 @Repository
 public class DynamicTableRepository {
 
