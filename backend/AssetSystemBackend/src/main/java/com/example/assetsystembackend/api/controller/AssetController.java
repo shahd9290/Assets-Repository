@@ -228,16 +228,17 @@ public class AssetController {
      * Endpoint to edit an existing asset.
      *
      * @param assetId ID of the asset to be edited
-     * @param payload Payload containing updated asset data
+     * @param data Payload containing updated asset data
      * @return ResponseEntity containing the response message
      */
     @PutMapping("/edit-asset/{id}")
-    public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, String> payload) {
+    public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, Object> data) {
         // Check if asset with given ID exists
         Optional<Asset> existingAssetOptional = assetService.findByID(assetId);
         if (existingAssetOptional.isEmpty()) {
             return ResponseEntity.badRequest().body("Asset not found for ID: " + assetId);
         }
+        Map<String, String> payload = (Map<String, String>) data.get("asset");
 
         Asset existingAsset = existingAssetOptional.get();
 
