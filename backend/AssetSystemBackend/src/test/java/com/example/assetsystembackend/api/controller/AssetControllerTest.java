@@ -3,6 +3,7 @@ package com.example.assetsystembackend.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.assetsystembackend.api.controller.AssetController.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,25 +50,10 @@ public class AssetControllerTest {
     @BeforeEach
     public void generateToken() {
         token = Jwts.builder()
-                .setSubject("administrator")
+                .setSubject("admin")
                 .setExpiration(new Date((new Date()).getTime() + 10000))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-    }
-
-    @BeforeEach
-    public void setUpPayload() {
-        Map<String, Object> assetPayload = new HashMap<>();
-        assetPayload.put("name", "test.txt");
-        assetPayload.put("creatorname", "John Doe");
-        assetPayload.put("type", "test");
-
-        Map<String, Object> typePayload = new HashMap<>();
-        typePayload.put("test1", "test");
-
-        payload = new HashMap<>();
-        payload.put("asset", assetPayload);
-        payload.put("type", typePayload);
     }
 
     @BeforeAll
@@ -80,8 +67,26 @@ public class AssetControllerTest {
         // Reset the IDs to not disturb the auto-generated sequence. DATA WILL BE LOST.
         template.execute("DROP TABLE IF EXISTS assets_relations;");
         template.execute("DROP TABLE IF EXISTS assets;");
+    }
 
+    @BeforeEach
+    public void assetPayload() {
+        Map<String, Object> assetPayload = new HashMap<>();
+        assetPayload.put("name", "test.txt");
+        assetPayload.put("creatorname", "John Doe");
+        assetPayload.put("type", "test");
 
+        Map<String, Object> typePayload = new HashMap<>();
+        typePayload.put("test1", "test");
+
+        payload = new HashMap<>();
+        payload.put("asset", assetPayload);
+        payload.put("type", typePayload);
+    }
+
+    private void deletePayload(int num) {
+        payload = new HashMap<>();
+        payload.put("id", num);
     }
 
     @Test
@@ -92,7 +97,7 @@ public class AssetControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Insertion successful!"));
+                .andExpect(content().string(SUCCESS_MSG));
 
     }
 
@@ -110,6 +115,167 @@ public class AssetControllerTest {
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Insertion successful!"));
+
+    }
+
+    @Test
+    public void testAddInvalidTypeOne() throws Exception {
+        HashMap<String, Object> assetPayload = (HashMap<String, Object>) payload.get("asset");
+        assetPayload.put("type", "invalid");
+        payload.replace("asset", assetPayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(INVALID_TYPE_MSG + "\nEnsure the Type exists."));
+    }
+
+    @Test
+    public void testAddInvalidTypeTwo() throws Exception {
+        HashMap<String, Object> typePayload = new HashMap<>();
+        typePayload.put("test4", "nonexist");
+        payload.replace("type", typePayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(INVALID_TYPE_MSG + "\nEnsure the Type contains the specified columns."));
+    }
+
+    @Test
+    public void testAddMissingKey() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload.get("asset"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(MISSING_DATA_MSG));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload.get("type"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(MISSING_DATA_MSG));
+    }
+
+    @Test
+    public void testAddParentOne() throws Exception {
+        testAddNormal();
+
+        HashMap<String, Object> assetPayload = (HashMap<String, Object>) payload.get("asset");
+        assetPayload.put("parent_id", 1);
+        assetPayload.put("relation_type", "Test");
+        payload.replace("asset", assetPayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(SUCCESS_MSG));
+    }
+
+    @Test
+    public void testAddParentTwo() throws Exception {
+        HashMap<String, Object> assetPayload = (HashMap<String, Object>) payload.get("asset");
+        assetPayload.put("parent_id", 1);
+        payload.replace("asset", assetPayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(RELATION_MSG));
+
+        assetPayload.remove("parent_id");
+        assetPayload.put("relation_type", "Test");
+        payload.replace("asset", assetPayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(RELATION_MSG));
+
+    }
+
+    @Test
+    public void testAddParentThree() throws Exception {
+        HashMap<String, Object> assetPayload = (HashMap<String, Object>) payload.get("asset");
+        assetPayload.put("parent_id", 15);
+        assetPayload.put("relation_type", "Test");
+        payload.replace("asset", assetPayload);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/add-new-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(INVALID_ID_MSG));
+    }
+
+    @Test
+    public void testDeleteOne() throws Exception {
+        testAddNormal();
+        deletePayload(2);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(REMOVAL_MSG));
+
+    }
+
+    @Test
+    public void testDeleteTwo() throws Exception {
+        testAddParentOne();
+        // asset id 1 should still be in the table from previous requests
+        deletePayload(1);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(DEPENDENCY_MSG));
+
+    }
+
+    @Test
+    public void testDeleteThree() throws Exception {
+        testAddNormal();
+        deletePayload(40);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(INVALID_ID_MSG));
+
+    }
+
+    @Test
+    public void testDeleteFour() throws Exception {
+        //empty
+        HashMap<String, Object> delPayload = new HashMap<>();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(delPayload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(MISSING_DATA_MSG + "(Missing Asset ID)"));
 
     }
 
