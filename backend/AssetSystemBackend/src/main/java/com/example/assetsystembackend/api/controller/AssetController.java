@@ -260,6 +260,7 @@ public class AssetController {
         }
 
         assetService.saveExistingAsset(existingAsset);
+        backLogService.addAssetEdit(existingAsset);
 
         return ResponseEntity.ok("Asset updated successfully");
     }
