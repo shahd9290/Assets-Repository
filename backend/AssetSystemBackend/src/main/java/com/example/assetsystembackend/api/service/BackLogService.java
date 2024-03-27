@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BackLogService {
@@ -70,6 +68,17 @@ public class BackLogService {
         return returned.getId() != null;
     }
 
+    public void addAssetTitleChange(Asset asset, String prevTitle) {
+        BackLog newEntry = new BackLog();
+        newEntry.setAsset(asset.getId());
+
+        // Generate message with today's date
+        LocalDate today = LocalDate.now();
+        String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // You can adjust the date format as needed
+        newEntry.setMessage(String.format("%s changed name of project from %s to %s on %s", asset.getCreatorName(), prevTitle, asset.getName(), formattedDate));
+
+        BackLog returned = backLogRepository.save(newEntry);
+    }
 
 
 }

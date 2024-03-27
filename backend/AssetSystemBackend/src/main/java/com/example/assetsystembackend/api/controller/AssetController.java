@@ -243,9 +243,13 @@ public class AssetController {
         Asset existingAsset = existingAssetOptional.get();
 
         // Update asset fields if they are provided in the payload
+        boolean isTitleChanged = false;
+        String oldName = "";
 
         // Update asset name if provided
         if (payload.containsKey("name")) {
+            isTitleChanged = true;
+            oldName = existingAsset.getName();
             existingAsset.setName(payload.get("name"));
         }
 
@@ -260,7 +264,11 @@ public class AssetController {
         }
 
         assetService.saveExistingAsset(existingAsset);
-        backLogService.addAssetEdit(existingAsset);
+        if (isTitleChanged) {
+            backLogService.addAssetTitleChange(existingAsset, oldName);
+        } else {
+            backLogService.addAssetEdit(existingAsset);
+        }
 
         return ResponseEntity.ok("Asset updated successfully");
     }
