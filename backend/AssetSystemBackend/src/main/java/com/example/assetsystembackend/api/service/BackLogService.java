@@ -15,14 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class BackLogService {
 
-    //Dummy User
-    private final String USER = "James";
-
     private final BackLogRepository backLogRepository;
 
     //Creation message
     private final String CREATION_STR = "%s created %s on %s";
 
+    //Edit message
     private final String EDIT_ASSET_STR = "%s edited %s on %s";
 
 
@@ -51,6 +49,14 @@ public class BackLogService {
 
     }
 
+    /**
+     * Adds an edit entry for the given asset to the backlog.
+     * This method creates a new entry in the backlog with information about the asset edit, including the creator's name,
+     * asset name, and the current date.
+     *
+     * @param asset The asset to be edited.
+     * @return {@code true} if the edit entry is successfully added to the backlog, {@code false} otherwise.
+     */
     public boolean addAssetEdit(Asset asset) {
         BackLog newEntry = new BackLog();
         newEntry.setAsset(asset.getId());
