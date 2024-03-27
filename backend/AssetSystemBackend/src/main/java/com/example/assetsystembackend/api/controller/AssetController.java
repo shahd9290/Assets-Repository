@@ -224,6 +224,13 @@ public class AssetController {
         return output;
     }
 
+    /**
+     * Endpoint to edit an existing asset.
+     *
+     * @param assetId ID of the asset to be edited
+     * @param payload Payload containing updated asset data
+     * @return ResponseEntity containing the response message
+     */
     @PutMapping("/edit-asset/{id}")
     public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, String> payload) {
         // Check if asset with given ID exists
