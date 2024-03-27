@@ -96,7 +96,7 @@ public class TypeController {
      * @return ResponseEntity containing a status message.
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/delete-type")
+    @DeleteMapping("/delete-type")
     public ResponseEntity<Object> deleteType(@RequestBody Map<String, Object> payload) {
         if (!payload.containsKey("table_name"))
             return ResponseEntity.badRequest().body("Invalid data provided!");
@@ -106,7 +106,7 @@ public class TypeController {
         if (!service.deleteTable(tableName))
             return ResponseEntity.badRequest().body("Table '" +tableName+ "' doesn't exist.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
+        return ResponseEntity.ok().body("Data removed successfully");
     }
 
     /**

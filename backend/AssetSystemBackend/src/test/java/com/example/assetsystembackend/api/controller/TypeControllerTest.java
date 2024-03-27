@@ -160,11 +160,11 @@ public class TypeControllerTest {
         template.execute("INSERT INTO test_table(column1) VALUES ('testSubject1'), ('testSubject2'), ('testSubject3');");
 
         Map<String, Object> payload = new HashMap<>();
-        payload.put("id", 3);
+        payload.put("table_name", "test_table");
 
         String payloadJson = objectMapper.writeValueAsString(payload);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/delete-asset")
+        mockMvc.perform(MockMvcRequestBuilders.delete("/type/delete-type")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payloadJson))
