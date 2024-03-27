@@ -3,7 +3,11 @@ import './App.css';
 import React, { useState } from 'react';
 import './App.css';
 import bearerToken from './components/tokens/token.json'
-
+/**
+ *  Component that contains form for creating types, along with integration code to the backend.
+ * 
+ * @returns component that contains form for creating types 
+ */
 function Types() {
   const tokens = JSON.stringify(bearerToken['bearer-tokens']);
   const token = tokens.slice(20,tokens.length-3);
@@ -11,6 +15,9 @@ function Types() {
   const[columns, setColumns] = useState('');
   const typeCol = columns.split(',')
 
+  /**
+   * Method that handles the contents of a form upon submission
+   */
   const handleSubmit = ()=>{
     fetch("http://localhost:8080/type/add-type",{
       method:'POST',
