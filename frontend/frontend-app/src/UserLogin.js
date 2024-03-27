@@ -1,6 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 /**
  * Renders form for users to enter their credentials and login
@@ -12,6 +13,7 @@ function UserLogin() {
   //states to be kept throughout the program 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const nav = useNavigate();
   const onSubmit = async (user)=>{
    user.preventDefault();
     try{
@@ -34,7 +36,7 @@ function UserLogin() {
       const storeUsername = await axios.patch('http://localhost:3500/users/1', userLoggedIn);
       console.log('Login successful!');
       alert("Login successful!");
-
+      nav('/')
     }catch (error){
       console.error('Login unsucssesful');
       alert('Wrong username or password')
