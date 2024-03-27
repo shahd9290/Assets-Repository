@@ -14,7 +14,6 @@ const EditAsset = () => {
   });
 
   useEffect(() => {
-    // Fetch the asset data when the component mounts
     const fetchAsset = async () => {
       const response = await fetch(`http://localhost:8080/assets/${assetId}`);
       const data = await response.json();
@@ -68,6 +67,7 @@ const EditAsset = () => {
             name="name"
             value={asset.name}
             onChange={handleChange}
+            style={{border: '1px solid #ccc'}}
           />
         </div>
         <div>
@@ -77,6 +77,7 @@ const EditAsset = () => {
             name="creatorName"
             value={asset.creatorName}
             onChange={handleChange}
+            style={{border: '1px solid #ccc'}}
           />
         </div>
         {/* Include other fields in the same way */}
@@ -87,6 +88,7 @@ const EditAsset = () => {
             name="link"
             value={asset.link}
             onChange={handleChange}
+            style={{border: '1px solid #ccc'}}
           />
         </div>
         <div>
@@ -95,6 +97,7 @@ const EditAsset = () => {
             name="description"
             value={asset.description}
             onChange={handleChange}
+            style={{border: '1px solid #ccc'}}
           />
         </div>
         <button type="submit">Save Changes</button>
