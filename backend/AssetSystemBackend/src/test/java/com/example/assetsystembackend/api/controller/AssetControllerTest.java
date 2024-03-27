@@ -3,7 +3,6 @@ package com.example.assetsystembackend.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +44,8 @@ public class AssetControllerTest {
 
     private String token;
 
+    private String date;
+
     @Value("${jwt.secret}")
     private String secret;
 
@@ -59,6 +61,7 @@ public class AssetControllerTest {
     @BeforeAll
     public void createTestType() {
         template.execute("CREATE TABLE IF NOT EXISTS test (id INT PRIMARY KEY, test1 VARCHAR(255));");
+        date = String.valueOf(LocalDate.now());
     }
 
     @AfterAll
@@ -279,4 +282,71 @@ public class AssetControllerTest {
 
     }
 
+    @Test
+    public void testSearchOne() throws Exception {
+        //empty request
+        HashMap<String, Object> searchPayload = new HashMap<>();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/search")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchPayload)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+    public void testSearchTwo() throws Exception {
+        testAddNormal();
+        //empty request but returns an asset
+        HashMap<String, Object> searchPayload = new HashMap<>();
+        searchPayload.put("search_term", "test.txt");
+        searchPayload.put("date_before", "2030-01-01");
+        searchPayload.put("user", "John Doe");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/search")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchPayload)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[" +
+                        "{\"parent_id\":null,\"name\":\"test.txt\",\"link\":null,\"description\":null," +
+                        "\"creator_name\":\"John Doe\",\"id\":1,\"creation_date\":\""+date+"\",\"relation_type\":null," +
+                        "\"type\":\"test\",\"test1\":\"test\"}" +
+                        "]"));
+    }
+
+    @Test
+    public void testSearchThree() throws Exception {
+        testAddParentOne();
+        //empty request but returns an asset
+        HashMap<String, Object> searchPayload = new HashMap<>();
+        searchPayload.put("parent_id", 1);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/search")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchPayload)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"parent_id\":1,\"name\":\"test.txt\",\"link\":null,\"description\":null," +
+                        "\"creator_name\":\"John Doe\",\"id\":4,\"creation_date\":\""+date+"\",\"relation_type\":\"Test\",\"type\":\"test\"," +
+                        "\"test1\":\"test\"}," +
+                        "{\"parent_id\":1,\"name\":\"test.txt\",\"link\":null,\"description\":null,\"creator_name\":\"John Doe\",\"id\":6," +
+                        "\"creation_date\":\""+date+"\",\"relation_type\":\"Test\",\"type\":\"test\",\"test1\":\"test\"}" +
+                        "]"));
+    }
+
+    @Test
+    public void testSearchFour() throws Exception {
+        //empty request
+        HashMap<String, Object> searchPayload = new HashMap<>();
+        searchPayload.put("type", "testing");
+        searchPayload.put("date_after", "3000-01-01");
+        mockMvc.perform(MockMvcRequestBuilders.post("/search")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchPayload)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
 }
