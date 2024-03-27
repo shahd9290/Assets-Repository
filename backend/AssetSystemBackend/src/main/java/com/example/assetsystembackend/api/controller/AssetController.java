@@ -223,6 +223,26 @@ public class AssetController {
 
         return output;
     }
+    
+    @PutMapping("/edit-asset/{id}")
+public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, Object> payload) {
+    Optional<Asset> optionalAsset = assetService.findByID(assetId);
+    if (optionalAsset.isEmpty()) {
+        return ResponseEntity.badRequest().body("Asset not found for ID: " + assetId);
+    }
+
+    Asset asset = optionalAsset.get();
+    if (payload.containsKey("name")) {
+        asset.setName((String) payload.get("name"));
+    }
+    if (payload.containsKey("description")) {
+        asset.setDescription((String) payload.get("description"));
+    }
+
+    
+    return ResponseEntity.ok("Asset updated successfully");
+}
+
 
     private boolean hasChildren(Long parent_id) {
         Map<String, Object> payload = new HashMap<>();
