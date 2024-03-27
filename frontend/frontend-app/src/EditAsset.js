@@ -40,7 +40,7 @@ const EditAsset = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`http://localhost:8080/assets/update-asset/${assetId}`, {
+    const response = await fetch(`http://localhost:8080/edit-asset/${assetId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,16 +66,6 @@ const EditAsset = () => {
             type="text"
             name="name"
             value={asset.name}
-            onChange={handleChange}
-            style={{border: '1px solid #ccc'}}
-          />
-        </div>
-        <div>
-          <label>Creator Name:</label>
-          <input
-            type="text"
-            name="creatorName"
-            value={asset.creatorName}
             onChange={handleChange}
             style={{border: '1px solid #ccc'}}
           />
