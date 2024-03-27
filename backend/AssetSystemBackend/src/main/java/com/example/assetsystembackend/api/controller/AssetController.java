@@ -245,6 +245,7 @@ public class AssetController {
         // Update asset fields if they are provided in the payload
         boolean isTitleChanged = false;
         String oldName = "";
+        String fieldChanged = "";
 
         // Update asset name if provided
         if (payload.containsKey("name")) {
@@ -255,19 +256,22 @@ public class AssetController {
 
         // Update description if provided
         if (payload.containsKey("description")) {
+            fieldChanged = "description";
             existingAsset.setDescription(payload.get("description"));
         }
 
         // Update link if provided
         if (payload.containsKey("link")) {
+            fieldChanged = "link";
             existingAsset.setLink(payload.get("link"));
         }
 
         assetService.saveExistingAsset(existingAsset);
         if (isTitleChanged) {
             backLogService.addAssetTitleChange(existingAsset, oldName);
-        } else {
-            backLogService.addAssetEdit(existingAsset);
+        }
+        if (!fieldChanged.isEmpty()){
+            backLogService.addAssetLinkOrDescriptionChange(existingAsset, fieldChanged);
         }
 
         return ResponseEntity.ok("Asset updated successfully");

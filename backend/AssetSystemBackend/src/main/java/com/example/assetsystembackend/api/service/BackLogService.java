@@ -18,8 +18,7 @@ public class BackLogService {
     //Creation message
     private final String CREATION_STR = "%s created %s on %s";
 
-    //Edit message
-    private final String EDIT_ASSET_STR = "%s edited %s on %s";
+    private final String DATE_FORMAT = "yyyy-MM-dd";
 
 
     @Autowired
@@ -47,37 +46,45 @@ public class BackLogService {
 
     }
 
+
     /**
-     * Adds an edit entry for the given asset to the backlog.
-     * This method creates a new entry in the backlog with information about the asset edit, including the creator's name,
-     * asset name, and the current date.
+     * Adds an entry to the backlog for the change of asset title.
+     * This method creates a new entry in the backlog with information about the change of asset title,
+     * including the creator's name, previous title, new title, and the current date.
      *
-     * @param asset The asset to be edited.
-     * @return {@code true} if the edit entry is successfully added to the backlog, {@code false} otherwise.
+     * @param asset The asset whose title has been changed.
+     * @param prevTitle The previous title of the asset.
      */
-    public boolean addAssetEdit(Asset asset) {
-        BackLog newEntry = new BackLog();
-        newEntry.setAsset(asset.getId());
-
-        // Generate message with today's date
-        LocalDate today = LocalDate.now();
-        String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // You can adjust the date format as needed
-        newEntry.setMessage(String.format(EDIT_ASSET_STR, asset.getCreatorName(), asset.getName(), formattedDate));
-
-        BackLog returned = backLogRepository.save(newEntry);
-        return returned.getId() != null;
-    }
-
     public void addAssetTitleChange(Asset asset, String prevTitle) {
         BackLog newEntry = new BackLog();
         newEntry.setAsset(asset.getId());
 
-        // Generate message with today's date
+        // Today's date
         LocalDate today = LocalDate.now();
-        String formattedDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // You can adjust the date format as needed
-        newEntry.setMessage(String.format("%s changed name of project from %s to %s on %s", asset.getCreatorName(), prevTitle, asset.getName(), formattedDate));
+        String formattedDate = today.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+        newEntry.setMessage(String.format("%s changed title of asset from %s to %s on %s", asset.getCreatorName(), prevTitle, asset.getName(), formattedDate));
 
-        BackLog returned = backLogRepository.save(newEntry);
+        backLogRepository.save(newEntry);
+    }
+
+    /**
+     * Adds an entry to the backlog for the change of asset link or description.
+     * This method creates a new entry in the backlog with information about the change of asset link or description,
+     * including the creator's name, the option changed (link or description), the asset name, and the current date.
+     *
+     * @param asset The asset whose link or description has been changed.
+     * @param option The option changed, either "link" or "description".
+     */
+    public void addAssetLinkOrDescriptionChange(Asset asset, String option) {
+        BackLog newEntry = new BackLog();
+        newEntry.setAsset(asset.getId());
+
+        // Today's date
+        LocalDate today = LocalDate.now();
+        String formattedDate = today.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+        newEntry.setMessage(String.format("%s changed %s of %s on %s", asset.getCreatorName(), option, asset.getName(), formattedDate));
+
+        backLogRepository.save(newEntry);
     }
 
 
