@@ -9,6 +9,7 @@ function Types() {
   const token = tokens.slice(20,tokens.length-3);
   const [type, setType] = useState("");
   const[columns, setColumns] = useState('');
+  const typeCol = columns.split(',')
 
   const handleSubmit = ()=>{
     fetch("http://localhost:8080/type/add-type",{
@@ -19,18 +20,19 @@ function Types() {
       },
       body:JSON.stringify({
         "table_name": type,
-        "columns": columns.split(',')
+        "columns": typeCol
       })
     })
-    .then( (item)=>{
-     
-          console.log( item.text());
-          alert( item.text());
-  })
-    .catch((error)=>{
-      console.log(error);
-      alert(error)
-    });
+    .then((res)=>{
+      res.text()
+      .then((response)=>{
+       console.log(response)
+       alert(response)
+      })
+     })
+     .catch((err)=>{
+       console.log(err)
+     })
   }
 
 
@@ -47,6 +49,7 @@ function Types() {
           value={type}
           onChange={(event)=>setType(event.target.value)}
         />
+        <br></br>
         <label htmlFor="type-columns">Column (Seperated by commas):</label>
         <textarea
           id="type-columns"
@@ -56,6 +59,7 @@ function Types() {
           value={columns}
           onChange={(e)=>setColumns(e.target.value)}
         />
+        <br></br>
         <button type="submit">Create type</button>
       </form>
     </div>

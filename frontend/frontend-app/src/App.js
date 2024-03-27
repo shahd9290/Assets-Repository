@@ -1,6 +1,5 @@
 //comments for team memebers to understand
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './App.css';
 import bearerToken from './components/tokens/token.json'
 
@@ -8,7 +7,7 @@ function App() {
   const tokens = JSON.stringify(bearerToken['bearer-tokens']);
   const token = tokens.slice(20,tokens.length-3);
   const usernames = JSON.stringify(bearerToken['users']);
-  const user = usernames.slice(20,usernames.length-3);
+  const user = usernames.slice(19,usernames.length-3);
   const [types, setTypes] = useState([]);
   const [assetName, setAssetName] = useState('');
   const [assetType, setAssetType] = useState('');
@@ -16,6 +15,7 @@ function App() {
   const [link, setLink] = useState('');
   const [pid,setPID] = useState(0);
   const [columns,setColumns] = useState([]);
+  const [type, setType] = useState({});
 
   useEffect(()=>{
     fetch('http://localhost:8080/type/get-types',
@@ -33,6 +33,11 @@ function App() {
     
   });
 
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setType(values => ({...values, [name]: value}))
+  }
   function selectType(type){
     setAssetType(type);
     fetch(`http://localhost:8080/type/get-columns/${type}`,
@@ -46,45 +51,38 @@ function App() {
         .then((col) => {
             if (col==null) {return }
             setColumns(col);
-            console.log(col);
         })
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const payload = {
-          method:'POST',
-        headers: { 'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+ token
-        },
-       body : {asset: {
-          "name": assetName,
-          "creatorname": user,
-          "type": assetType,
-         " description": desc,
-          "link":link,
-          "parent_id":pid
-        },
-        type: {
-          "title": assetName,
-          "creator": user,
-          
-        }}
-      };
 
       // POST request to the backend endpoint
-      const response = await axios.post('http://localhost:8080/add-new-asset', payload);
-      console.log(response.data);
-      alert("Asset created successfully!");
-
-      // Reset the form
-    } catch (error) {
-      // Error handling
-      const errorMessage = error.response ? error.response.data : error.message;
-      console.error('Error submitting form:', errorMessage);
-      alert("Failed to create asset. Error: " + (typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage, null, 2)));
-    }
+      fetch('http://localhost:8080/add-new-asset',
+      {method:'POST',
+      headers: { 'Content-Type': 'application/json',
+                  'Authorization': 'Bearer '+ token
+      },
+      body : JSON.stringify({asset: {
+        "name": assetName,
+        "creatorname": user,
+        "type": assetType,
+       "description": desc,
+        "link":link,
+        "parent_id":pid
+      },
+      type})}
+      )
+      .then((res)=>{
+       res.text()
+       .then((response)=>{
+        console.log(response)
+        alert(response)
+       })
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
   };
 
   return (
@@ -126,7 +124,7 @@ function App() {
               name="type"
               required
               value={assetType}
-              onChange={(event)=>{selectType(event.target.value)}}
+              onChange={(e)=>{selectType(e.target.value)}}
             >
         {
           types.map((t)=>(
@@ -153,10 +151,10 @@ function App() {
               <label key={index}>{addRec}</label><input
               type="text"
               id="asset-parent"
-              name="parent"
+              name={addRec}
               required
-              value=""
-              onChange={(e) => { setPID(e.target.value); } } />
+              value={type.name}
+              onChange={handleChange} />
               </div>
           ))}
         </div>
