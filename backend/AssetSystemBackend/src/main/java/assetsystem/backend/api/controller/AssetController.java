@@ -184,7 +184,7 @@ public class AssetController {
      * @return A list of assets taken from the database.
      */
     private List<Map<String, Object>> getAssets() {
-        // Retrievs data from the assets table. NOT type table.
+        // Retrieves data from the assets table. NOT type table.
         List<Asset> assetsInfo = assetService.getAllAssets();
         ListIterator<Asset> assetIterator = assetsInfo.listIterator();
 
