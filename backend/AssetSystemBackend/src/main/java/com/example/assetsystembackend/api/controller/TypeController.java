@@ -43,10 +43,14 @@ public class TypeController {
      */
     @GetMapping("/get-columns/{tableName}")
     public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName){
-        List<String> columns= service.getTableColumns(tableName);
-        if (columns.isEmpty())
+        try{
+            List<String> columns = service.getTableColumns(tableName);
+            return ResponseEntity.ok(columns);
+        }
+        catch (Exception e) {
             return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(columns);
+        }
+
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.assetsystembackend.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,13 +75,20 @@ public class TypeControllerTest {
         template.execute("DROP TABLE IF EXISTS test_table;");
     }
 
+    @BeforeEach
+    public void createType () {
+        template.execute("CREATE TABLE IF NOT EXISTS test_table (column1 VARCHAR(255), column2 VARCHAR(255));");
+    }
+
+    @AfterEach
+    public void deleteType () {
+        template.execute("DROP TABLE IF EXISTS test_table;");
+    }
+
     @Test
     public void testAddTypeEndpointDuplicate() throws Exception {
-        // Create a table for the duplicate test
-        template.execute("CREATE TABLE IF NOT EXISTS duplicate_table (column1 VARCHAR(255), column2 VARCHAR(255));");
-
         Map<String, Object> payload = new HashMap<>();
-        payload.put("table_name", "duplicate_table");
+        payload.put("table_name", "test_table");
         payload.put("columns", List.of("column1", "column2"));
 
         String payloadJson = objectMapper.writeValueAsString(payload);
@@ -90,11 +98,9 @@ public class TypeControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(payloadJson))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Table 'duplicate_table' already exists."))
+                .andExpect(content().string("Table 'test_table' already exists."))
                 .andReturn();
 
-        //Delete table
-        template.execute("DROP TABLE IF EXISTS duplicate_table;");
     }
 
     @Test
@@ -109,54 +115,38 @@ public class TypeControllerTest {
 
     @Test
     public void testInsertDataSuccess() throws Exception {
-        String tableName = "test_table";
-
-        //Create new table
-        template.execute("CREATE TABLE IF NOT EXISTS test_table (column1 VARCHAR(255), column2 VARCHAR(255));");
-
         // Insert data into a new table
         Map<String, Object> payload = new HashMap<>();
         payload.put("column1", "value1");
         payload.put("column2", "value2");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/test_table")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Data inserted successfully"));
 
-        // Delete table
-        template.execute("DROP TABLE IF EXISTS test_table;");
     }
 
 
     @Test
     public void testIsValidInsertData_Invalid() throws Exception {
-        //Create new table
-        template.execute("CREATE TABLE IF NOT EXISTS test_table (column1 VARCHAR(255), column2 VARCHAR(255));");
-
         // Validate invalid data for insertion
-        String tableName = "test_table";
         Map<String, Object> data = new HashMap<>();
         data.put("column1", "value1");
         data.put("column3", "value3"); // Wrong column (for testing)
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/{tableName}", tableName)
+        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/test_table")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(data)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid data provided!"));
-
-        // Delete table
-        template.execute("DROP TABLE IF EXISTS test_table;");
     }
 
     @Test
     public void testDeleteTypeEndpoint() throws Exception {
-        // Create a table for deletion
-        template.execute("CREATE TABLE IF NOT EXISTS test_table (id SERIAL PRIMARY KEY, column1 VARCHAR(255));");
         template.execute("INSERT INTO test_table(column1) VALUES ('testSubject1'), ('testSubject2'), ('testSubject3');");
 
         Map<String, Object> payload = new HashMap<>();
@@ -171,8 +161,33 @@ public class TypeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Data removed successfully"));
 
-        // Delete table
+
+    }
+
+    @Test
+    public void testGettersOne() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-columns/test_table")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testGettersTwo() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-columns/other")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
         template.execute("DROP TABLE IF EXISTS test_table;");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-types/")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
 
     }
 
