@@ -359,4 +359,60 @@ public class AssetControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void testEditAssetOne() throws Exception {
+        testAddNormal();
+        payload = new HashMap<>();
+
+        HashMap<String, Object> editPayload = new HashMap<>();
+        editPayload.put("name", "edited.txt");
+
+        payload.put("asset", editPayload);
+        mockMvc.perform(MockMvcRequestBuilders.put("/edit-asset/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Asset updated successfully"));
+
+        editPayload.remove("name");
+        editPayload.put("description", "edited description");
+
+        payload.replace("asset", editPayload);
+        mockMvc.perform(MockMvcRequestBuilders.put("/edit-asset/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Asset updated successfully"));
+
+        editPayload.remove("description");
+        editPayload.put("link", "newlink.com");
+
+        payload.replace("asset", editPayload);
+        mockMvc.perform(MockMvcRequestBuilders.put("/edit-asset/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Asset updated successfully"));
+
+    }
+
+    @Test
+    public void testEditAssetTwo() throws Exception {
+        payload = new HashMap<>();
+
+        HashMap<String, Object> editPayload = new HashMap<>();
+        editPayload.put("name", "edited.txt");
+
+        payload.put("asset", editPayload);
+        mockMvc.perform(MockMvcRequestBuilders.put("/edit-asset/45")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Asset not found for ID: 45"));
+    }
 }
