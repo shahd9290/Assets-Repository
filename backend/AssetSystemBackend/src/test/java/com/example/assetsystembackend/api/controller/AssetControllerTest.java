@@ -349,4 +349,14 @@ public class AssetControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+
+    @Test
+    public void testAssetLog() throws Exception {
+        testAddNormal();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/audit/log/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
