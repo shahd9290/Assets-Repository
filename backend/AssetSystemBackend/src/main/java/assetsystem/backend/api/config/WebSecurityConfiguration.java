@@ -2,7 +2,7 @@ package assetsystem.backend.api.config;
 
 import assetsystem.backend.api.jwt.AuthEntryPoint;
 import assetsystem.backend.api.jwt.AuthTokenFilter;
-import assetsystem.backend.api.service.UserDetailsServiceImpl;
+import assetsystem.backend.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ public class WebSecurityConfiguration {
      * @return The authentication JWT token filter.
      */
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter(){
+    public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
 
@@ -45,7 +45,7 @@ public class WebSecurityConfiguration {
      * @return The DAO authentication provider.
      */
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
         authProvider.setUserDetailsService(userDetailsService);
@@ -73,7 +73,7 @@ public class WebSecurityConfiguration {
      * @return The password encoder.
      */
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,10 +42,14 @@ public class TypeController {
      */
     @GetMapping("/get-columns/{tableName}")
     public ResponseEntity<List<String>> getTypeAttributes(@PathVariable String tableName){
-        List<String> columns= service.getTableColumns(tableName);
-        if (columns.isEmpty())
+        try{
+            List<String> columns = service.getTableColumns(tableName);
+            return ResponseEntity.ok(columns);
+        }
+        catch (Exception e) {
             return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(columns);
+        }
+
     }
 
     /**
@@ -97,7 +100,7 @@ public class TypeController {
      * @return ResponseEntity containing a status message.
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/delete-type")
+    @DeleteMapping("/delete-type")
     public ResponseEntity<Object> deleteType(@RequestBody Map<String, Object> payload) {
         if (!payload.containsKey("table_name"))
             return ResponseEntity.badRequest().body("Invalid data provided!");
@@ -107,45 +110,9 @@ public class TypeController {
         if (!service.deleteTable(tableName))
             return ResponseEntity.badRequest().body("Table '" + tableName + "' doesn't exist.");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
+        return ResponseEntity.ok().body("Data removed successfully");
     }
 
-    /**
-     * Insert data into a table.
-     *
-     * @param tableName The name of the table.
-     * @param data The data to be inserted.
-     * @return ResponseEntity containing a status message.
-     */
-    @PostMapping("/insert-data/{tableName}")
-    public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
-        if (!isValidInsertData(tableName, data))
-            return ResponseEntity.badRequest().body("Invalid data provided!");
-
-        if (!service.insertData(tableName, data))
-            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data inserted successfully");
-    }
-
-    /**
-     * Delete data from a table.
-     *
-     * @param tableName The name of the table.
-     * @param data The data to be deleted.
-     * @return ResponseEntity containing a status message.
-     */
-
-    @PostMapping("/remove-data/{tableName}")
-    public ResponseEntity<Object> deleteData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
-        if (!isValidInsertData(tableName, data))
-            return ResponseEntity.badRequest().body("Invalid data provided!");
-
-        if (!service.deleteData(tableName, (Long) data.get("id")))
-            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
-    }
 
     /**
      * Method to verify the structure of the data received matches the expected one
