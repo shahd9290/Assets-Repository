@@ -82,8 +82,8 @@ export default function App(props) {
         return res.json();
         })
         .then((data) => {
-            if (data===null) {
-              return console.log("no assets returned");            
+            if (data==='') {
+             alert("no relationships found")          
             }
             setChild(data);
         });
@@ -93,18 +93,16 @@ export default function App(props) {
  
   return ((props.trigger)?(
 
-    <div className='asset-relationships' onMouseEnter={()=> makeGraph(props.childID,props.parentName,props.relation)} >
-      
-      { child.map( (c)=>(
+    <div className='asset-relationships' onMouseEnter={()=> makeGraph(props.childID,props.parentName,props.relation)}>
+      <button className='close-btn' onClick={()=>props.setTrigger(false)}><CgClose /></button> 
+      { child && child.map( (c)=>(
         <div className="inner-ar" key={c.id} onMouseEnter={()=>setChildName(c.name)}>
-           <p> {parent} {relation} {childName}</p>
-        <button className='close-btn' onClick={()=>props.setTrigger(false)}><CgClose /></button> 
-       
+        <p> {parent} {relation} {childName}</p>
         <ReactFlow nodes={assets} edges={edges}>
-          
         </ReactFlow>
         {props.children}
       </div>))}
+      {childName===null ?(<h3 className='no-relation'>No related assets</h3>):(<></>)}
   </div>
   ):""
 

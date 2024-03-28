@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,20 +60,25 @@ public class DynamicService {
      *
      * @return A list of unique type tables
      */
-    public List<String> getTypeTableNames() {
+    public List<Object> getTypes() {
         String query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';";
-
+        String[] sysTables = {"assets", "assets_relations", "backlog", "roles", "user_roles", "users"};
+        List<Object> output = new ArrayList<>();
         return template.query(query, rs -> {
 
-            List<String> columns = new ArrayList<>();
-
-            while (rs.next()) {
+            table:while (rs.next()) {
+                HashMap<String, Object> columns = new HashMap<>();
                 String table = rs.getString("table_name");
-                if (!table.equals("assets"))
-                    columns.add(table);
+                for (String sysTable: sysTables) {
+                    if (table.equals(sysTable))
+                        continue table;
+                }
+                columns.put("type", table);
+                columns.put("columns", getTableColumns(table));
+                output.add(columns);
             }
 
-            return columns;
+            return output;
         });
     }
 

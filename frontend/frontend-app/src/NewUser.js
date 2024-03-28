@@ -34,8 +34,8 @@ function NewUser() {
        alert("user registration successful!");
  
      }catch (error){
-       console.error('N/a');
-       alert('no bueno')
+       console.error(error);
+       alert('failed to register user')
      };
    }
   return (
@@ -57,9 +57,9 @@ function NewUser() {
           <label htmlFor="user-type">User Type:</label>
           <p></p>
           <select id="user-type" className="type" required value ={role} onChange={(e)=>{setRole(e.target.value)}}>
-            <option value='ROLE_USER'>User</option>
-            <option value='ROLE_ADMIN'>Admin</option>
-            <option value='ROLE_VIEWER'>Viewer</option>
+            <option value='user'>User</option>
+            <option value='admin'>Admin</option>
+            <option value='viewer'>Viewer</option>
           </select>
           <p></p>
           <p></p>
