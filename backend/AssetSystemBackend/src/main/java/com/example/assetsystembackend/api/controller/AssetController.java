@@ -238,6 +238,7 @@ public class AssetController {
      * @param data Payload containing updated asset data
      * @return ResponseEntity containing the response message
      */
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping("/edit-asset/{id}")
     public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, Object> data) {
         // Check if asset with given ID exists

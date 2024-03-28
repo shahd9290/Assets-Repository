@@ -23,6 +23,8 @@ public class BackLogService {
 
     private final String DATE_FORMAT = "yyyy-MM-dd";
 
+    private final String DELETION_STR=  "%s created %s on %s";
+
 
     @Autowired
     public BackLogService(BackLogRepository logRepo) {
@@ -66,10 +68,9 @@ public class BackLogService {
 
         // Get current date
         LocalDate currentDate = LocalDate.now();
-        Date date = Date.valueOf(currentDate);
 
         // Generate message
-        newEntry.setMessage(String.format(DELETION_STR, asset.getCreatorName(), asset.getName(), date));
+        newEntry.setMessage(String.format(DELETION_STR, asset.getCreatorName(), asset.getName(), currentDate));
         BackLog returned = backLogRepository.save(newEntry);
         return returned.getId() != null;
     }
@@ -114,6 +115,12 @@ public class BackLogService {
 
         backLogRepository.save(newEntry);
     }
+
+    public List<BackLog> getBackLogByAsset(Long id) {
+        return backLogRepository.findByAssetId(id);
+
+    }
+
 
 
 }

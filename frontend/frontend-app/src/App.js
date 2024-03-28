@@ -34,9 +34,9 @@ function App() {
   });
 
   const handleChange = (event) => {
-    const name = event.target.name;
+    const colName = event.target.name;
     const value = event.target.value;
-    setType(values => ({...values, [name]: value}))
+    setType(values => ({...values, [colName]: value}))
   }
   function selectType(type){
     setAssetType(type);
@@ -153,7 +153,7 @@ function App() {
               id="asset-parent"
               name={addRec}
               required
-              value={type.name}
+              value={type.colName}
               onChange={handleChange} />
               </div>
           ))}
