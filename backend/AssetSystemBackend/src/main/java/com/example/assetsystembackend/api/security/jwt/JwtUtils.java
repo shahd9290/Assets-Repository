@@ -1,7 +1,7 @@
 package com.example.assetsystembackend.api.security.jwt;
 
 import com.example.assetsystembackend.api.repository.UserRepository;
-import com.example.assetsystembackend.api.security.service.UserDetailsImpl;
+import com.example.assetsystembackend.api.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

@@ -9,7 +9,7 @@ import com.example.assetsystembackend.api.payload.response.JwtResponse;
 import com.example.assetsystembackend.api.repository.RoleRepository;
 import com.example.assetsystembackend.api.repository.UserRepository;
 import com.example.assetsystembackend.api.security.jwt.JwtUtils;
-import com.example.assetsystembackend.api.security.service.UserDetailsImpl;
+import com.example.assetsystembackend.api.service.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

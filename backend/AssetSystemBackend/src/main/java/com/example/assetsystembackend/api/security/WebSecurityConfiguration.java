@@ -2,7 +2,7 @@ package com.example.assetsystembackend.api.security;
 
 import com.example.assetsystembackend.api.security.jwt.AuthEntryPoint;
 import com.example.assetsystembackend.api.security.jwt.AuthTokenFilter;
-import com.example.assetsystembackend.api.security.service.UserDetailsServiceImpl;
+import com.example.assetsystembackend.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

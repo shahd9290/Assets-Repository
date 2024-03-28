@@ -1,4 +1,4 @@
-package com.example.assetsystembackend.api.security.service;
+package com.example.assetsystembackend.api.service;
 
 import com.example.assetsystembackend.api.model.User;
 import com.example.assetsystembackend.api.repository.UserRepository;

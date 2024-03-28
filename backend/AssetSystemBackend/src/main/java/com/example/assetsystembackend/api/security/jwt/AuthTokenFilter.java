@@ -1,6 +1,6 @@
 package com.example.assetsystembackend.api.security.jwt;
 
-import com.example.assetsystembackend.api.security.service.UserDetailsServiceImpl;
+import com.example.assetsystembackend.api.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
