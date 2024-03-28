@@ -1,4 +1,4 @@
-package assetsystem.backend.api.security.jwt;
+package assetsystem.backend.api.jwt;
 
 import assetsystem.backend.api.repository.UserRepository;
 import assetsystem.backend.api.service.UserDetailsImpl;

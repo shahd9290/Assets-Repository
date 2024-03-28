@@ -1,4 +1,4 @@
-package assetsystem.backend.api.security.jwt;
+package assetsystem.backend.api.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

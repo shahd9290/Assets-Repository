@@ -1,7 +1,7 @@
-package assetsystem.backend.api.security;
+package assetsystem.backend.api.config;
 
-import assetsystem.backend.api.security.jwt.AuthEntryPoint;
-import assetsystem.backend.api.security.jwt.AuthTokenFilter;
+import assetsystem.backend.api.jwt.AuthEntryPoint;
+import assetsystem.backend.api.jwt.AuthTokenFilter;
 import assetsystem.backend.api.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

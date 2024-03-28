@@ -8,7 +8,7 @@ import assetsystem.backend.api.payload.request.SignupRequest;
 import assetsystem.backend.api.payload.response.JwtResponse;
 import assetsystem.backend.api.repository.RoleRepository;
 import assetsystem.backend.api.repository.UserRepository;
-import assetsystem.backend.api.security.jwt.JwtUtils;
+import assetsystem.backend.api.jwt.JwtUtils;
 import assetsystem.backend.api.service.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
