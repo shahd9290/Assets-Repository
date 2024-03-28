@@ -49,16 +49,20 @@ public class BackLogController {
      * @param id The ID of the asset.
      * @return List of maps representing audit log entries.
      */
+    //ID OF THE ASSET
     @GetMapping("/log/{id}")
     public List<Map<String, String>> getLogById(@PathVariable("id") long id) {
-        List<BackLog> list = backLogService.getBackLogByAsset(id);
+        List<BackLog> a = backLogService.getBackLogByAsset(id);
         List<Map<String, String>> output = new ArrayList<>();
-        for (BackLog entry : list) {
+        for (BackLog b : a) {
+
             Map<String, String > map = new HashMap<>();
-            map.put("id", entry.getId().toString());
-            map.put("entry", entry.getMessage());
+            map.put("id", b.getId().toString());
+            map.put("entry", b.getMessage());
             output.add(map);
         }
+
         return output;
     }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class TypeController {
 
     @GetMapping("/get-types")
     public ResponseEntity<Object> getType() {
-        List<String> tables = service.getTypeTableNames();
+        List<Object> tables = service.getTypes();
         if (tables.isEmpty())
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(tables);
@@ -84,7 +85,7 @@ public class TypeController {
         List<String> columns = (List<String>) columnsObject;
 
         if (!service.createTable(tableName, columns))
-            return ResponseEntity.badRequest().body("Table '" +tableName+ "' already exists.");
+            return ResponseEntity.badRequest().body("Table '" + tableName + "' already exists.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Data added successfully");
     }
@@ -104,7 +105,7 @@ public class TypeController {
         String tableName = (String) payload.get("table_name");
 
         if (!service.deleteTable(tableName))
-            return ResponseEntity.badRequest().body("Table '" +tableName+ "' doesn't exist.");
+            return ResponseEntity.badRequest().body("Table '" + tableName + "' doesn't exist.");
 
         return ResponseEntity.ok().body("Data removed successfully");
     }
@@ -147,7 +148,8 @@ public class TypeController {
     }
 
     /**
-     * Method to verify the structure of the data received matches the expected one from the API.
+     * Method to verify the structure of the data received matches the expected one
+     * from the API.
      * More checks can be added, now contains only the minimum the requirements.
      *
      * @param payload The data received

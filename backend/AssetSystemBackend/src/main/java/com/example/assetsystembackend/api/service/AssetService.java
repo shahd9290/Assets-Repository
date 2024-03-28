@@ -76,4 +76,8 @@ public class AssetService {
      * @return true if the asset exists, false otherwise.
      */
     public boolean exists (Long id) {return assetsRepo.existsById(id);}
+
+    public void saveExistingAsset(Asset asset) {
+        assetsRepo.save(asset);
+    }
 }

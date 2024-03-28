@@ -24,7 +24,7 @@
     align-items: center;
 }
 
-.inner-ar .close-btn{
+.close-btn{
     position: absolute;
     top: 16px;
     right: 16px;
@@ -32,4 +32,7 @@
 
 label{
     margin-left: 15px;
+}
+.no-relation{
+    color: antiquewhite;
 }
