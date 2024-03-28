@@ -114,42 +114,6 @@ public class TypeController {
         return ResponseEntity.ok().body("Data removed successfully");
     }
 
-    /**
-     * Insert data into a table.
-     *
-     * @param tableName The name of the table.
-     * @param data The data to be inserted.
-     * @return ResponseEntity containing a status message.
-     */
-    @PostMapping("/insert-data/{tableName}")
-    public ResponseEntity<Object> insertData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
-        if (!isValidInsertData(tableName, data))
-            return ResponseEntity.badRequest().body("Invalid data provided!");
-
-        if (!service.insertData(tableName, data))
-            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data inserted successfully");
-    }
-
-    /**
-     * Delete data from a table.
-     *
-     * @param tableName The name of the table.
-     * @param data The data to be deleted.
-     * @return ResponseEntity containing a status message.
-     */
-
-    @PostMapping("/remove-data/{tableName}")
-    public ResponseEntity<Object> deleteData(@PathVariable String tableName, @RequestBody Map<String, Object> data) {
-        if (!isValidInsertData(tableName, data))
-            return ResponseEntity.badRequest().body("Invalid data provided!");
-
-        if (!service.deleteData(tableName, (Long) data.get("id")))
-            return ResponseEntity.badRequest().body("Database Error! \nInvalid data provided!");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Data removed successfully");
-    }
 
     /**
      * Method to verify the structure of the data received matches the expected one

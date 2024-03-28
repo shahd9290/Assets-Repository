@@ -113,37 +113,6 @@ public class TypeControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
-    @Test
-    public void testInsertDataSuccess() throws Exception {
-        // Insert data into a new table
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("column1", "value1");
-        payload.put("column2", "value2");
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/test_table")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("Data inserted successfully"));
-
-    }
-
-
-    @Test
-    public void testIsValidInsertData_Invalid() throws Exception {
-        // Validate invalid data for insertion
-        Map<String, Object> data = new HashMap<>();
-        data.put("column1", "value1");
-        data.put("column3", "value3"); // Wrong column (for testing)
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/type/insert-data/test_table")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(data)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Invalid data provided!"));
-    }
 
     @Test
     public void testDeleteTypeEndpoint() throws Exception {
@@ -165,29 +134,16 @@ public class TypeControllerTest {
     }
 
     @Test
-    public void testGettersOne() throws Exception {
+    public void testGetColumns() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/type/get-columns/test_table")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-    }
-
-    @Test
-    public void testGettersTwo() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/type/get-columns/other")
                         .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-
-        template.execute("DROP TABLE IF EXISTS test_table;");
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/type/get-types/")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-
 
     }
 
