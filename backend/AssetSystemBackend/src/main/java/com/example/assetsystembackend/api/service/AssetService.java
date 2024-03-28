@@ -39,4 +39,8 @@ public class AssetService {
     }
 
     public boolean exists (Long id) {return assetsRepo.existsById(id);}
+
+    public void saveExistingAsset(Asset asset) {
+        assetsRepo.save(asset);
+    }
 }

@@ -231,6 +231,60 @@ public class AssetController {
         return output;
     }
 
+    /**
+     * Endpoint to edit an existing asset.
+     *
+     * @param assetId ID of the asset to be edited
+     * @param data Payload containing updated asset data
+     * @return ResponseEntity containing the response message
+     */
+    @PutMapping("/edit-asset/{id}")
+    public ResponseEntity<String> editAsset(@PathVariable("id") long assetId, @RequestBody Map<String, Object> data) {
+        // Check if asset with given ID exists
+        Optional<Asset> existingAssetOptional = assetService.findByID(assetId);
+        if (existingAssetOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Asset not found for ID: " + assetId);
+        }
+        Map<String, String> payload = (Map<String, String>) data.get("asset");
+
+        Asset existingAsset = existingAssetOptional.get();
+
+        // Update asset fields if they are provided in the payload
+        boolean isTitleChanged = false;
+        String oldName = "";
+        String fieldChanged = "";
+
+        // Update asset name if provided
+        if (payload.containsKey("name")) {
+            isTitleChanged = true;
+            oldName = existingAsset.getName();
+            existingAsset.setName(payload.get("name"));
+        }
+
+        // Update description if provided
+        if (payload.containsKey("description")) {
+            fieldChanged = "description";
+            existingAsset.setDescription(payload.get("description"));
+        }
+
+        // Update link if provided
+        if (payload.containsKey("link")) {
+            fieldChanged = "link";
+            existingAsset.setLink(payload.get("link"));
+        }
+
+        assetService.saveExistingAsset(existingAsset);
+        if (isTitleChanged) {
+            backLogService.addAssetTitleChange(existingAsset, oldName);
+        }
+        if (!fieldChanged.isEmpty()){
+            backLogService.addAssetLinkOrDescriptionChange(existingAsset, fieldChanged);
+        }
+
+        return ResponseEntity.ok("Asset updated successfully");
+    }
+
+
     private boolean hasChildren(Long parent_id) {
         Map<String, Object> payload = new HashMap<>();
 

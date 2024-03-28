@@ -5,6 +5,7 @@ import App from "./App";
 import NewUser from "./NewUser";
 import UserLogin from "./UserLogin";
 import AssetTable from "./components/AssetTable";
+import EditAsset from "./EditAsset";
 function Home() {
 
 
@@ -19,6 +20,8 @@ function Home() {
             <Route path='/' element={<AssetTable/>} />
             <Route path='/assets' element={<AssetTable/>} />
             <Route path='/logout'element={<UserLogin/>}/>
+            <Route path='/register-user' element={<NewUser/>} />
+            <Route path='/edit-asset/:assetId' element={<EditAsset />} />
         </Routes>
 
     </div>

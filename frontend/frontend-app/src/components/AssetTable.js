@@ -9,7 +9,7 @@ import { TbCirclesRelation } from "react-icons/tb";
 import { FiEdit } from "react-icons/fi";
 import ATSB from './ATSearchBar';
 import bearerToken from './tokens/token.json'
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -37,7 +37,7 @@ const Fetch = ({ onEdit }) => {
   const [at_search, setAT_Search]= useState(null);
   const tokens = JSON.stringify(bearerToken['bearer-tokens']);
  const token = tokens.slice(20,tokens.length-3);
- 
+  const navigate = useNavigate();
 
   useEffect(() => {
     retrieveAssets();
@@ -211,7 +211,7 @@ const Fetch = ({ onEdit }) => {
                                     style = {{marginLeft:"5px"}} onClick={()=>deleteBtn(asset.id)}><MdOutlineDeleteForever /></button>
                                 </td>
                                 <td className='e-row'>
-                                <button className="btn" ><FiEdit /></button>
+                                <button className="btn" onClick={() => navigate(`/edit-asset/${asset.id}`)}><FiEdit /></button>
                                 </td>
                                 <td className='at-row'>
                                     <button className = "auditTrail" onClick={()=>getAssetTrail(asset.id)} ><AiOutlineAudit /></button>
